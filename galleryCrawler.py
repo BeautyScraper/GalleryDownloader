@@ -683,27 +683,41 @@ class rssImageExtractor(scrapy.Spider):
     def downloadImg(self, Url, path):
         regFile = "filewise\\" + re.sub('[^A-Za-z0-9\-]+', "", Url.split("/")[2])
         path = self.properName(path)
-        if self.alreadyNotDownloaded(regFile, path):
-            time.sleep(5)
-            r = requests.get(Url, stream=True)
-            if r.status_code == 200:
-                i = 0
-                self.ensure_dir("incomplete\\" + path)
-                with open("incomplete\\" + path, 'wb') as pdf:
-                    for chunk in r.iter_content(chunk_size=1024):
-                        # print(i)
-                        # i = i + 1
-                        # writing one chunk at a time to pdf file
-                        if chunk:
-                            pdf.write(chunk)
-            try:
+
+        try:
+            if self.alreadyNotDownloaded(regFile, path):
+                time.sleep(5)
+                r = requests.get(Url, stream=True,timeout = 3)
                 if r.status_code == 200:
+                    i = 0
+                    self.ensure_dir("incomplete\\" + path)
+                    with open("incomplete\\" + path, 'wb') as pdf:
+                        for chunk in r.iter_content(chunk_size=1024):
+                            # print(i)
+                            # i = i + 1
+                            # writing one chunk at a time to pdf file
+                            # r.raise_for_status()
+                            if chunk:
+                                # print(chunk)
+                                pdf.write(chunk)
+                try:
                     os.rename("incomplete\\" + path, path)
-            except Exception as e:
-                with open("logRenaming.txt", "a+") as inF:
-                    inF.write(str(e) + "\n")
-                    os.remove("incomplete\\" + path)
-            self.downloadCompleteRegister(regFile, path)
+                except Exception as e:
+                    with open("logRenaming.txt", "a+") as inF:
+                        inF.write(str(e) + "\n")
+                        os.remove("incomplete\\" + path)
+                self.downloadCompleteRegister(regFile, path)
+        except requests.exceptions.HTTPError as errh:
+            print ("Http Error:", errh)
+        except requests.exceptions.ConnectionError as errc:
+            print ("Error Connecting:", errc)
+            raise scrapy.exceptions.DropItem("just drop it and continue")
+            return False
+        except requests.exceptions.Timeout as errt:
+            print ("Timeout Error:", errt)
+        except requests.exceptions.RequestException as err:
+            print ("OOps: Something Else", err)
+        return True
 
 
 if __name__ == "__main__":
