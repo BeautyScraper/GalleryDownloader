@@ -218,7 +218,6 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister(websiteName, galleryCode)
 
-
     def thumbToLarge2(self, response):
         strInSrc = response.meta['search']
         replaceWith = response.meta['replace']
@@ -240,7 +239,7 @@ class rssImageExtractor(scrapy.Spider):
                 i = i + 1
                 formedUrl = re.sub(strInSrc, replaceWith, imgUrl)
                 # imgFileName = galleryCode + " " + str(i) + ".jpg"
-                imgFileName = galleryCode + " " +formedUrl.split("/")[-1]
+                imgFileName = galleryCode + " " + formedUrl.split("/")[-1]
                 print(formedUrl)
                 if not re.search("http", formedUrl):
                     temp = "/".join(response.url.split("/")[:-1])
@@ -249,8 +248,6 @@ class rssImageExtractor(scrapy.Spider):
                 print(formedUrl)
                 self.downloadImg(formedUrl, "Expande\\%s" % imgFileName)
             self.downloadCompleteRegister(websiteName, galleryCode)
-
-
 
     def roadBlock(self, index, filename):
         print("entering roadblock")
@@ -700,7 +697,8 @@ class rssImageExtractor(scrapy.Spider):
                         if chunk:
                             pdf.write(chunk)
             try:
-                os.rename("incomplete\\" + path, path)
+                if r.status_code == 200:
+                    os.rename("incomplete\\" + path, path)
             except Exception as e:
                 with open("logRenaming.txt", "a+") as inF:
                     inF.write(str(e) + "\n")
