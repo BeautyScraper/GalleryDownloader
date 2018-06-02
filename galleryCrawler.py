@@ -678,12 +678,11 @@ class rssImageExtractor(scrapy.Spider):
 
     def properName(self, name):
         name = name.replace("amp", "")
-        return re.sub('[^A-Za-z0-9\-\.\\\ ]+', "", name)
+        return re.sub('[^A-Za-z0-9_\-\.\\\ ]+', "", name)
 
     def downloadImg(self, Url, path):
         regFile = "filewise\\" + re.sub('[^A-Za-z0-9\-]+', "", Url.split("/")[2])
         path = self.properName(path)
-
         try:
             if self.alreadyNotDownloaded(regFile, path):
                 time.sleep(5)

@@ -332,21 +332,14 @@ class rssImageExtractor(scrapy.Spider):
 
     def downloadDDF2(self, response):
         # print("Aziani named:%s" % response.url)
-        modelLink = response.css(".cover-wrap a::attr(href)").extract()
-        modelPhoto = response.css(".cover-wrap a img::attr(src)").extract()
-
-        # t = open("galleryLinks.opml", "a")
-        for i in range(0, len(modelLink)):
-            modelName = modelLink[i].replace("/", "s1ash")
-            links = modelName
-            print("Aziani url under consideration: " + modelPhoto[i])
-            if self.alreadyNotDownloaded("DDFG2", links):
-                urllib.request.urlretrieve(modelPhoto[i], "models\\%s.jpg" % modelName)
-
-                # t.write("http://www.aziani.com" + links + "\n")
-                self.downloadCompleteRegister("DDFG2", links)
-            print(links)
-        #
+        modelLink = [urllib.request.urljoin(response.url, x) for x in response.css(".card h5 a::attr(href)").extract()]
+        modelPhoto = [x for x in response.css(".card a img::attr(src)").extract() if x != "#"]
+        modelFilename = [self.properName(x.split("/")[-2].split("?")[0]) for x in modelLink]
+        modelName = response.css(".card h6 a:first-of-type::attr(href)").extract()
+        filename = []
+        for fm in range(len(modelFilename)):
+            filename.append(self.properName(modelFilename[fm] + "_" + modelName[fm].split("/")[2] + ".jpg"))
+        self.downloadTHumbsGeneric(response, modelLink, modelPhoto, filename)
 
     def aziani(self, response):
         # print("Aziani named:%s" % response.url)
