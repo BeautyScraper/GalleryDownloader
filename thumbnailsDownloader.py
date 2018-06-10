@@ -96,7 +96,7 @@ class rssImageExtractor(scrapy.Spider):
 
     def foxHQ(self, response):
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
-        if self.alreadyNotDownloaded(websiteName, response.url):
+        if True:
             galleryLinks = response.css("td[align*=cen] a[target*=blank]::attr(href)").extract()
             imgLinks = response.css("td[align*=cen] a[target*=blank]").css("img::attr(src)").extract()
             fileNames = []

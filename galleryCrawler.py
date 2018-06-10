@@ -21,6 +21,7 @@ class rssImageExtractor(scrapy.Spider):
             # filename2 = "upperbound.opml"
             # filename = "galleryLinks.opml"
             filename = "StaticLinks.opml"
+            # filename = "Test.opml"
         # filename = "foxHQ.opml"
         # filename = "puba.opml"
         t = open(filename, "r+")
@@ -502,7 +503,8 @@ class rssImageExtractor(scrapy.Spider):
         for imgUrls in imageUrls:
             imgFileName = imgUrls.split("/")[-1]
             self.ensure_dir("Art\\")
-            self.downloadImg(imgUrls, "Art\\%s" % imgFileName)
+            if not self.downloadImg(imgUrls, "Art\\%s" % imgFileName):
+                break
 
     def ScoreLand(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -615,16 +617,51 @@ class rssImageExtractor(scrapy.Spider):
 
     def EvilAngel(self, response):
         print("evilAngel")
-        imgUrl = response.css("img").re("src=\"(.*?nva.*?)\"")[0]
+        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
         i = 0
-        starName = response.css(".pgTitleActorsText").re("title=\"(.*?)\"")[0]
+        starName = " and ".join(response.css(".pgTitleActorsText").re("title=\"(.*?)\"")) + " "
+        galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
         if self.alreadyNotDownloaded("evilAngel", response.url):
-            for i in range(0, 84, 4):
-                formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
-                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + str(i) + ".jpg"
-                print(formedUrl)
-                self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
+            for imgUrl in imgUrls:
+                # formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
+                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + ".jpg"
+                # print(formedUrl)
+
+                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("evilAngel", response.url)
+        thirdPartyUrlTemplate = "http://html.sxx.com/2/128/pics/@@/nude/153_c1848_01.html?pr=8&su=1&ad=12950"
+        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@",galCode)
+        spiderMeta = {}
+        spiderMeta["galCode"] = galCode
+        spiderMeta["galleryName"] = starName
+        yield scrapy.Request(url=thirdPartyUrl,callback=self.thirdParty,meta=spiderMeta)
+
+
+    def thirdParty(self,response):
+        galleryCode = response.meta["galCode"]
+        galName = response.meta["galleryName"]
+        websiteName = self.properName(response.url.split("/")[2])
+        i = 0
+        imgUrls = response.css("a[href*=\.jpg]::attr(href)").extract()
+        # imgUrls = response.css("a img[src*=%s]::attr(src)" % (strInSrc,)).extract()
+        if self.alreadyNotDownloaded(websiteName, galleryCode):
+            pendingFilename = ""
+            print("setting pendingfile name to skip")
+            for imgUrl in imgUrls:
+                downloadDir = "BabesImgs"
+                i = i + 1
+                formedUrl = imgUrl
+                imgFileName = galName+ " "+galleryCode +" " + str(i) + ".jpg"
+                print("Currently Formed URL is " + formedUrl)
+                if not re.search("http", formedUrl):
+                    temp = "/".join(response.url.split("/")[:-1])
+                    temp = temp.strip("/") + "/"
+                    formedUrl = temp + formedUrl
+                print(formedUrl)
+                # imgFileName = "pending " + imgFileName
+                self.downloadImg(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
+            self.downloadCompleteRegister(websiteName, galleryCode)
+
 
     def DevilsFilm(self, response):
         print("DevilsFilm")
@@ -686,7 +723,7 @@ class rssImageExtractor(scrapy.Spider):
         try:
             if self.alreadyNotDownloaded(regFile, path):
                 time.sleep(5)
-                r = requests.get(Url, stream=True,timeout = 3)
+                r = requests.get(Url, stream=True,timeout = 5)
                 if r.status_code == 200:
                     i = 0
                     self.ensure_dir("incomplete\\" + path)
@@ -706,6 +743,7 @@ class rssImageExtractor(scrapy.Spider):
                         inF.write(str(e) + "\n")
                         os.remove("incomplete\\" + path)
                 self.downloadCompleteRegister(regFile, path)
+                return True
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
@@ -716,7 +754,7 @@ class rssImageExtractor(scrapy.Spider):
             print ("Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
             print ("OOps: Something Else", err)
-        return True
+        return False
 
 
 if __name__ == "__main__":

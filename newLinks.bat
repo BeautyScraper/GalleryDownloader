@@ -14,4 +14,3 @@ for /f "delims=^." %%i in (galleryLinksTemp.txt) do echo http://babesource.com/g
 del /q/f galleryLinksTemp.txt
 rd /s/q C:\GalImgs\chosen
 md C:\GalImgs\chosen
-::python batchGen.py >> babesource.opml
