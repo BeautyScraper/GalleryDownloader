@@ -3,25 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="96bc449c-d4bd-4bbb-8195-c887a1d23a22" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StaticLinks.opml" beforeDir="false" afterPath="$PROJECT_DIR$/StaticLinks.opml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babesource - Copy.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource - Copy.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/babesource.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/galleryCrawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/galleryCrawler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/Gallery/alluringVixenGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/alluringVixenGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/Gallery/babesourceGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/babesourceGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/Gallery/scorelandGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/scorelandGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/Gallery/www.foxhq.comGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.foxhq.comGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/ScoreLand.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/ScoreLand.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/alluringvixens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/alluringvixens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/babeGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/babeGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/galleriesalluringvixenscom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/galleriesalluringvixenscom.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/gallysscorelandcom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/gallysscorelandcom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/mediababesourcecom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/mediababesourcecom.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/orig00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/orig00deviantartnet.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/videos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/videos.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/porncomix.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/porncomix.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logRenaming.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logRenaming.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/thumbnailsDownloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/thumbnailsDownloader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +27,8 @@
       <file leaf-file-name="galleryCrawler.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+            <state relative-caret-position="236">
+              <caret line="696" column="40" lean-forward="true" selection-start-line="696" selection-start-column="40" selection-end-line="696" selection-end-column="40" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -107,8 +98,8 @@
       <file leaf-file-name="thumbnailsDownloader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="100" column="19" selection-start-line="100" selection-start-column="19" selection-end-line="100" selection-end-column="19" />
+            <state relative-caret-position="270">
+              <caret line="226" column="66" selection-start-line="226" selection-start-column="66" selection-end-line="226" selection-end-column="66" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -156,6 +147,7 @@
       <find>car</find>
       <find>ride</find>
       <find>trace</find>
+      <find>foxhq</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -379,7 +371,14 @@
       <option name="project" value="LOCAL" />
       <updated>1528650374292</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="r34anime">
+      <created>1528727686807</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1528727686807</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -440,7 +439,8 @@
     <MESSAGE value="updated db" />
     <MESSAGE value="ddf added" />
     <MESSAGE value="fast deviant" />
-    <option name="LAST_COMMIT_MESSAGE" value="fast deviant" />
+    <MESSAGE value="r34anime" />
+    <option name="LAST_COMMIT_MESSAGE" value="r34anime" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -926,8 +926,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="100" column="19" selection-start-line="100" selection-start-column="19" selection-end-line="100" selection-end-column="19" />
+        <state relative-caret-position="270">
+          <caret line="226" column="66" selection-start-line="226" selection-start-column="66" selection-end-line="226" selection-end-column="66" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -936,8 +936,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+        <state relative-caret-position="236">
+          <caret line="696" column="40" lean-forward="true" selection-start-line="696" selection-start-column="40" selection-end-line="696" selection-end-column="40" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

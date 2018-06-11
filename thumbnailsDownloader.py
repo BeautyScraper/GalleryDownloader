@@ -27,6 +27,8 @@ class rssImageExtractor(scrapy.Spider):
             for url in urls:
                 if "babesource.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnails)
+                if "porncomix.info" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.porncomix)
                 if "r34anim" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.r34anime)
                 if "ddfnetwork.com" in url:
@@ -96,12 +98,13 @@ class rssImageExtractor(scrapy.Spider):
         print(response.meta['galCodeFromImgExtractorRe'])
         self.modifyToGalleryLink(response, link, replacement)
 
-    def r34anime(self,response):
+    def r34anime(self, response):
         links = [x.split("#")[0] for x in response.css(".post-thumbnail a::attr(href)").extract()]
         print(links)
-        self.writeNewLinks(response,links)
+        self.writeNewLinks(response, links)
 
     def foxHQ(self, response):
+        print("foxhq stated")
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
         if True:
             galleryLinks = response.css("td[align*=cen] a[target*=blank]::attr(href)").extract()
@@ -111,6 +114,22 @@ class rssImageExtractor(scrapy.Spider):
                 fileNames.append(imgL.split("/")[-2] + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
+
+    def porncomix(self, response):
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = response.css(".post>a:first-of-type::attr(href)").extract()
+            galCodes1 = response.css(".post>span:first-of-type::text").extract()
+            galCode = []
+            for i in range(len(galCodes1)):
+                galCode.append(galleryLinks[i] + galCodes1[i])
+            imgLinks = response.css(".post>a>img::attr(data-lazy-src)").extract()
+            fileNames = []
+            for imgL in imgLinks:
+                fileNames.append(imgL.split("/")[-1])
+                print(imgL.split("/")[-1])
+            self.downloadTHumbsGeneric2(response, galleryLinks, imgLinks, fileNames, galCode)
+            # self.downloadCompleteRegister(websiteName, response.url)
 
     def youtube_fetch_username(self, url):
         print("youtube")
@@ -156,13 +175,17 @@ class rssImageExtractor(scrapy.Spider):
 
         yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
 
-    def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames):
+    def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
         websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
         for i in range(len(galleryLinks)):
             links = galleryLinks[i]
+            if galleryCode == []:
+                galCode = links
+            else:
+                galCode = galleryCode[i]
             imgLink = imgLinks[i]
             fileName = fileNames[i]
-            if self.alreadyNotDownloaded(websiteName, links):
+            if self.alreadyNotDownloaded(websiteName, galCode):
                 # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
                 formedUrl = links
                 if not re.search("http", formedUrl):
@@ -171,10 +194,39 @@ class rssImageExtractor(scrapy.Spider):
                     formedUrl = temp + formedUrl
                 print(formedUrl)
                 os.system("md NewBabes\\%s" % websiteName)
+                print("NewBabes\\%s\\%s and img link %s" % (websiteName, fileName, imgLink))
                 urllib.request.urlretrieve(imgLink, "NewBabes\\%s\\%s" % (websiteName, fileName))
                 self.setFileMeta(fileName, formedUrl, websiteName)
                 # self.downloadThisGallery(formedUrl)
-                self.downloadCompleteRegister(websiteName, links)
+                self.downloadCompleteRegister(websiteName, galCode)
+            print(links)
+
+    def downloadTHumbsGeneric2(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
+        websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
+        for i in range(len(galleryLinks)):
+            links = galleryLinks[i]
+            if galleryCode == []:
+                galCode = links
+            else:
+                galCode = galleryCode[i]
+            imgLink = imgLinks[i]
+            fileName = fileNames[i]
+            if self.alreadyNotDownloaded(websiteName, galCode):
+                # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
+                formedUrl = links
+                if not re.search("http", formedUrl):
+                    temp = "/".join(response.url.split("/")[:-1])
+                    temp = temp.strip("/") + "/"
+                    formedUrl = temp + formedUrl
+                print(formedUrl)
+                os.system("md NewBabes\\%s" % websiteName)
+                print("NewBabes\\%s\\%s and img link %s" % (websiteName, fileName, imgLink))
+                x = galleryCrawler.rssImageExtractor()
+                x.downloadImg(imgLink, "NewBabes\\%s\\%s" % (websiteName, fileName))
+                # urllib.request.urlretrieve(imgLink, "NewBabes\\%s\\%s" % (websiteName, fileName))
+                self.setFileMeta(fileName, formedUrl, websiteName)
+                # self.downloadThisGallery(formedUrl)
+                self.downloadCompleteRegister(websiteName, galCode)
             print(links)
 
     def modifyToGalleryLink(self, response, link, replacement):

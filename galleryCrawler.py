@@ -19,9 +19,9 @@ class rssImageExtractor(scrapy.Spider):
             filename = sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            filename = "galleryLinks.opml"
+            # filename = "galleryLinks.opml"
             # filename = "StaticLinks.opml"
-            # filename = "Test.opml"
+            filename = "Test.opml"
         # filename = "foxHQ.opml"
         # filename = "puba.opml"
         t = open(filename, "r+")
@@ -112,10 +112,10 @@ class rssImageExtractor(scrapy.Spider):
                 print("else " + url)
                 yield scrapy.Request(url=url[:-1], callback=self.imgLinks)
 
-    def r34anime(self,response):
+    def r34anime(self, response):
         videoUrl = response.css("source::attr(src)").extract()[0]
         filename = videoUrl.split("/")[-1].split("?")[0]
-        self.downloadThisVideo(response,r"C:\Heaven\Haven\pornTubes",filename,videoUrl)
+        self.downloadThisVideo(response, r"C:\Heaven\Haven\pornTubes", filename, videoUrl)
 
     def alreadyNotDownloaded(self, fileName, Id):
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -637,14 +637,13 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("evilAngel", response.url)
         thirdPartyUrlTemplate = "http://html.sxx.com/2/128/pics/@@/nude/153_c1848_01.html?pr=8&su=1&ad=12950"
-        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@",galCode)
+        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
         spiderMeta = {}
         spiderMeta["galCode"] = galCode
         spiderMeta["galleryName"] = starName
-        yield scrapy.Request(url=thirdPartyUrl,callback=self.thirdParty,meta=spiderMeta)
+        yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
 
-
-    def thirdParty(self,response):
+    def thirdParty(self, response):
         galleryCode = response.meta["galCode"]
         galName = response.meta["galleryName"]
         websiteName = self.properName(response.url.split("/")[2])
@@ -658,7 +657,7 @@ class rssImageExtractor(scrapy.Spider):
                 downloadDir = "BabesImgs"
                 i = i + 1
                 formedUrl = imgUrl
-                imgFileName = galName+ " "+galleryCode +" " + str(i) + ".jpg"
+                imgFileName = galName + " " + galleryCode + " " + str(i) + ".jpg"
                 print("Currently Formed URL is " + formedUrl)
                 if not re.search("http", formedUrl):
                     temp = "/".join(response.url.split("/")[:-1])
@@ -668,7 +667,6 @@ class rssImageExtractor(scrapy.Spider):
                 # imgFileName = "pending " + imgFileName
                 self.downloadImg(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
             self.downloadCompleteRegister(websiteName, galleryCode)
-
 
     def DevilsFilm(self, response):
         print("DevilsFilm")
@@ -688,17 +686,18 @@ class rssImageExtractor(scrapy.Spider):
         print("Downloading Pictures from URL:%s" % response.url)
         imgUrls = response.css("img.attachment-thumbnail.size-thumbnail").re("lazy-src=\"([^\"]*jpg)\"")
         i = 0
-        comicsCode = re.sub('[^A-Za-z0-9\.\-]+', '', response.css("title").re("<title>(.*?)<")[0])
+        comicsCode = re.sub('[^A-Za-z0-9\.\-]+', '', response.css("title").re("<title>(.*?)<")[0] + str(len(imgUrls)))
         if self.alreadyNotDownloaded("porncomix", response.css("title").re("<title>(.*?)<")[0]) or True:
             for imgUrl in imgUrls:
                 i += 1
                 print(imgUrl + "rock")
-                formedUrl = imgUrl.replace("-225x320.", ".")
-                formedUrl = formedUrl.replace("-165x240.", ".")
+                replaceThis = "-" + imgUrl.split("-")[-1].split(".")[0] + "."
+                formedUrl = imgUrl.replace(replaceThis, ".")
+                # formedUrl = formedUrl.replace("-165x240.", ".")
                 imgFileName = comicsCode
                 self.ensure_dir(self.properName("comics\\%s\\%s" % (imgFileName, str(i) + ".jpg")))
                 self.downloadImg(formedUrl, "comics\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
-            self.downloadCompleteRegister("porncomix", response.css("title").re("<title>(.*?)<")[0])
+            self.downloadCompleteRegister("porncomix", response.css("title").re("<title>(.*?)<")[0] + str(len(imgUrls)))
 
     def download8Muses(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -730,7 +729,7 @@ class rssImageExtractor(scrapy.Spider):
         try:
             if self.alreadyNotDownloaded(regFile, path):
                 time.sleep(5)
-                r = requests.get(Url, stream=True,timeout = 5)
+                r = requests.get(Url, stream=True, timeout=5)
                 if r.status_code == 200:
                     i = 0
                     self.ensure_dir("incomplete\\" + path)
@@ -752,15 +751,15 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadCompleteRegister(regFile, path)
                 return True
         except requests.exceptions.HTTPError as errh:
-            print ("Http Error:", errh)
+            print("Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
-            print ("Error Connecting:", errc)
+            print("Error Connecting:", errc)
             raise scrapy.exceptions.DropItem("just drop it and continue")
             return False
         except requests.exceptions.Timeout as errt:
-            print ("Timeout Error:", errt)
+            print("Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
-            print ("OOps: Something Else", err)
+            print("OOps: Something Else", err)
         return False
 
 
