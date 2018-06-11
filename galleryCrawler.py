@@ -19,8 +19,8 @@ class rssImageExtractor(scrapy.Spider):
             filename = sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            # filename = "galleryLinks.opml"
-            filename = "StaticLinks.opml"
+            filename = "galleryLinks.opml"
+            # filename = "StaticLinks.opml"
             # filename = "Test.opml"
         # filename = "foxHQ.opml"
         # filename = "puba.opml"
@@ -85,6 +85,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.aziani)
             elif "scoreland.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.ScoreLand)
+            elif "r34anim.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.r34anime)
             elif "babesource.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.downloadThisBabesGallery)
             elif "penthouse.com" in url:
@@ -109,6 +111,11 @@ class rssImageExtractor(scrapy.Spider):
             else:
                 print("else " + url)
                 yield scrapy.Request(url=url[:-1], callback=self.imgLinks)
+
+    def r34anime(self,response):
+        videoUrl = response.css("source::attr(src)").extract()[0]
+        filename = videoUrl.split("/")[-1].split("?")[0]
+        self.downloadThisVideo(response,r"C:\Heaven\Haven\pornTubes",filename,videoUrl)
 
     def alreadyNotDownloaded(self, fileName, Id):
         dir_path = os.path.dirname(os.path.realpath(__file__))

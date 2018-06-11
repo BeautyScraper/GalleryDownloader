@@ -27,6 +27,8 @@ class rssImageExtractor(scrapy.Spider):
             for url in urls:
                 if "babesource.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnails)
+                if "r34anim" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.r34anime)
                 if "ddfnetwork.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadDDF2)
                 if "scoreland2.com" in url:
@@ -93,6 +95,11 @@ class rssImageExtractor(scrapy.Spider):
         link = response.meta['Samplelink']
         print(response.meta['galCodeFromImgExtractorRe'])
         self.modifyToGalleryLink(response, link, replacement)
+
+    def r34anime(self,response):
+        links = [x.split("#")[0] for x in response.css(".post-thumbnail a::attr(href)").extract()]
+        print(links)
+        self.writeNewLinks(response,links)
 
     def foxHQ(self, response):
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
