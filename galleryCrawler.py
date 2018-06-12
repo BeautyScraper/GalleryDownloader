@@ -48,6 +48,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.photodromm)
             elif "dirtyhardcash.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.dirtyHardcash)
+            elif "comicvine.gamespot.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.comicVine)
             elif "devilsfilm.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
             elif "galleries.spizoo.com" in url:
@@ -713,6 +715,19 @@ class rssImageExtractor(scrapy.Spider):
                 self.ensure_dir("Comics\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
                 self.downloadImg(formedUrl, "Comics\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
             self.downloadCompleteRegister("8muses", comicsCode)
+
+    def comicVine(self,response):
+        imgUrls = response.css(".fluid-width").css("img[src*=scale]::attr(src)").extract()
+        print("Downloading Pictures from URL:%s" % response.url)
+        i = 0
+        galCode = response.css("title::text").extract()[0]
+        if self.alreadyNotDownloaded("comicVine", galCode):
+            for imgUrl in imgUrls:
+                i += 1
+                imgFileName = galCode + str(i) +".jpg"
+                print(imgUrl)
+                self.downloadImg(imgUrl, "Art\\%s" % imgFileName)
+            self.downloadCompleteRegister("comicVine", galCode)
 
     def ensure_dir(self, file_path):
         directory = os.path.dirname(file_path)

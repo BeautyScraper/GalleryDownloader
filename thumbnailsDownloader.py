@@ -33,6 +33,8 @@ class rssImageExtractor(scrapy.Spider):
                     yield scrapy.Request(url=url[:-1], callback=self.r34anime)
                 if "ddfnetwork.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadDDF2)
+                if "comicvine.gamespot.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.comicvine)
                 if "scoreland2.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.scoreland2)
                 if "porngals4.com" in url:
@@ -112,6 +114,19 @@ class rssImageExtractor(scrapy.Spider):
             fileNames = []
             for imgL in galleryLinks:
                 fileNames.append(imgL.split("/")[-2] + ".jpg")
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def comicvine(self, response):
+        print("comicvine stated")
+        websiteName = self.properName(response.url.split("/")[2])
+        if True:
+            galleryLinks = response.css(".issue-grid>li>a::attr(href)").extract()
+            imgLinks = response.css(".issue-grid>li>a>div>img::attr(src)").extract()
+            fileNames1 =  response.css(".issue-number::text").extract()
+            fileNames = []
+            for imgL in fileNames1:
+                fileNames.append(imgL + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
 
