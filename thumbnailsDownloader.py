@@ -193,7 +193,7 @@ class rssImageExtractor(scrapy.Spider):
     def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
         websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
         for i in range(len(galleryLinks)):
-            links = galleryLinks[i]
+            links = galleryLinks[i].lstrip("/")
             if galleryCode == []:
                 galCode = links
             else:
