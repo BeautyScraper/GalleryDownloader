@@ -34,7 +34,11 @@ class rssImageExtractor(scrapy.Spider):
                 if "ddfnetwork.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadDDF2)
                 if "comicvine.gamespot.com" in url:
-                    yield scrapy.Request(url=url[:-1], callback=self.comicvine)
+                    if "new-comics" in url:
+                        yield scrapy.Request(url=url[:-1], callback=self.comicvine)
+                    else:
+                        yield scrapy.Request(url=url[:-1], callback=self.comicvineGood)
+
                 if "scoreland2.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.scoreland2)
                 if "porngals4.com" in url:
@@ -129,6 +133,23 @@ class rssImageExtractor(scrapy.Spider):
                 fileNames.append(imgL + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
+
+    def comicvineGood(self, response):
+        print("writing euroticaGallery named:%s" % response.url)
+        websiteName = self.properName(response.url.split("/")[2])
+        galleryLinks = galleryLinks = response.css(".issue-grid>li>a::attr(href)").extract()
+        i = 0
+        # t = open("galleryLinks.opml", "a")
+        for links in galleryLinks:
+            if self.alreadyNotDownloaded(websiteName + "gallery", links):
+                # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
+                self.downloadThisGallery("https://comicvine.gamespot.com" + links)
+                self.downloadCompleteRegister(websiteName + "gallery", links)
+                print("https://comicvine.gamespot.com" + links)
+        # extraPages = response.css("a[href*=page]::attr(href)").extract()[-1]
+        if "page=" not in response.url:
+            for i in range(1,10):
+                yield scrapy.Request(url=response.url+"?page="+str(i), callback=self.comicvineGood)
 
     def porncomix(self, response):
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
@@ -354,6 +375,8 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadCompleteRegister(websiteName + "gallery", links)
                 print("http://www.scoreland2.com" + links)
         #
+
+
 
     def babeShow(self, response):
         print("writing babeshow named:%s" % response.url)

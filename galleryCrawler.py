@@ -729,6 +729,7 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(imgUrl, "Art\\%s" % imgFileName)
             self.downloadCompleteRegister("comicVine", galCode)
 
+
     def ensure_dir(self, file_path):
         directory = os.path.dirname(file_path)
         if not os.path.exists(directory):
