@@ -7,6 +7,7 @@ import time
 import random
 import sys
 import os
+from scrapy.spidermiddlewares.httperror import HttpError
 
 from scrapy.crawler import CrawlerProcess
 
@@ -49,7 +50,7 @@ class rssImageExtractor(scrapy.Spider):
             elif "dirtyhardcash.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.dirtyHardcash)
             elif "comicvine.gamespot.com" in url:
-                yield scrapy.Request(url=url[:-1], callback=self.comicVine)
+                yield scrapy.Request(url=url[:-1], callback=self.comicVine,errback=self.on404)
             elif "devilsfilm.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
             elif "galleries.spizoo.com" in url:
@@ -148,6 +149,18 @@ class rssImageExtractor(scrapy.Spider):
                 spiderMeta["filterBySrc"] = "hirez"
                 spiderMeta["getNameBy"] = "Title"
                 yield scrapy.Request(url=link, callback=self.SingleImage, meta=spiderMeta, priority=1)
+
+    def on404(self, failure):
+        print(failure.value.response.status)
+        if failure.value.response.status == 429:
+            time.sleep(10)
+        if failure.value.response.status == 403:
+            print("found a dead url " + failure.request.url)
+            filename = "403Msg.txt"
+            with open(filename, "a+") as inF:
+                inF.write(failure.request.url + "\n")
+            # self.removeLine("instaLinks.opml", failure.request.url+"/"\)
+
 
     def SingleImage(self, response):
         print("Entering a page to download a single image")
