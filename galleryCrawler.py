@@ -15,6 +15,10 @@ from scrapy.crawler import CrawlerProcess
 class rssImageExtractor(scrapy.Spider):
     name = "quotes"
 
+    custom_settings = {
+        'USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
+    }
+
     def start_requests(self):
         try:
             filename = sys.argv[1]
@@ -39,6 +43,9 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.puba)
             elif "pubacash.com" in url:
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.puba)
+            elif "hbrowse.com" in url:
+                url1 = url.replace("hbrowse.com", "hbrowse.com/thumbnails")
+                yield scrapy.Request(url=url1.rstrip("\n"), callback=self.hBrowse)
             elif "ddfnetwork.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.ddf)
             elif "ddfnetwork.com" in url:
@@ -50,7 +57,7 @@ class rssImageExtractor(scrapy.Spider):
             elif "dirtyhardcash.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.dirtyHardcash)
             elif "comicvine.gamespot.com" in url:
-                yield scrapy.Request(url=url[:-1], callback=self.comicVine,errback=self.on404)
+                yield scrapy.Request(url=url[:-1], callback=self.comicVine, errback=self.on404)
             elif "devilsfilm.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
             elif "galleries.spizoo.com" in url:
@@ -160,7 +167,6 @@ class rssImageExtractor(scrapy.Spider):
             with open(filename, "a+") as inF:
                 inF.write(failure.request.url + "\n")
             # self.removeLine("instaLinks.opml", failure.request.url+"/"\)
-
 
     def SingleImage(self, response):
         print("Entering a page to download a single image")
@@ -484,18 +490,18 @@ class rssImageExtractor(scrapy.Spider):
         print("Downloading Pictures from URL puba:%s" % response.request.url)
         print(response.url)
         imgUrls = response.css("a").re("href=\"([^\"]*jpg)\"")
-        imgCode = response.url.split("/")[-2]
+        imgCode = response.css(".vid_text::text").extract()[0] + " " + response.url.split(".")[-4]
         t = response.url
         i = 0
         if self.alreadyNotDownloaded("puba", imgCode):
             for imgUrl in imgUrls:
                 i += 1
-                imgFileName = response.url.split("/")[-3] + " " + imgCode + str(i) + ".jpg"
-                imgUrl = self.relativeToAbsoulute(response, imgUrl)
+                imgFileName = imgCode +" "+ str(i) + ".jpg"
+                # imgUrl = self.relativeToAbsoulute(response, imgUrl)
                 print(imgUrl)
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("puba", imgCode)
-            self.downloadCompleteRegister("puba2", "@" + re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", t)[1] + "@")
+            # self.downloadCompleteRegister("puba2", "@" + re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", t)[1] + "@")
 
     def aziani(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -702,7 +708,7 @@ class rssImageExtractor(scrapy.Spider):
         imgUrls = response.css("img.attachment-thumbnail.size-thumbnail").re("lazy-src=\"([^\"]*jpg)\"")
         i = 0
         comicsCode = re.sub('[^A-Za-z0-9\.\-]+', '', response.css("title").re("<title>(.*?)<")[0] + str(len(imgUrls)))
-        if self.alreadyNotDownloaded("porncomix", response.css("title").re("<title>(.*?)<")[0]) or True:
+        if self.alreadyNotDownloaded("porncomix", response.css("title").re("<title>(.*?)<")[0]):
             for imgUrl in imgUrls:
                 i += 1
                 print(imgUrl + "rock")
@@ -713,6 +719,24 @@ class rssImageExtractor(scrapy.Spider):
                 self.ensure_dir(self.properName("comics\\%s\\%s" % (imgFileName, str(i) + ".jpg")))
                 self.downloadImg(formedUrl, "comics\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
             self.downloadCompleteRegister("porncomix", response.css("title").re("<title>(.*?)<")[0] + str(len(imgUrls)))
+
+    def hBrowse(self, response):
+        print("Downloading Pictures from URL:%s" % response.url)
+        imgUrls = response.css("img::attr(src)").extract()
+        i = 0
+        comicsCode = self.properName(response.css("title").re("<title>(.*?)<")[0])
+        if self.alreadyNotDownloaded("hBrowse", response.css("title").re("<title>(.*?)<")[0]):
+            for imgUrl1 in imgUrls:
+                i += 1
+                imgUrl = urllib.request.urljoin(response.url, imgUrl1)
+                print(imgUrl + "rock")
+                replaceThis = "zzz/"
+                formedUrl = imgUrl.replace(replaceThis, "")
+                # formedUrl = formedUrl.replace("-165x240.", ".")
+                imgFileName = comicsCode
+                self.ensure_dir(self.properName("hentai\\%s\\%s" % (imgFileName, str(i) + ".jpg")))
+                self.downloadImg(formedUrl, "hentai\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
+            self.downloadCompleteRegister("hBrowse", response.css("title").re("<title>(.*?)<")[0])
 
     def download8Muses(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -729,7 +753,7 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(formedUrl, "Comics\\%s\\%s" % (imgFileName, str(i) + ".jpg"))
             self.downloadCompleteRegister("8muses", comicsCode)
 
-    def comicVine(self,response):
+    def comicVine(self, response):
         imgUrls = response.css(".fluid-width").css("img[src*=scale]::attr(src)").extract()
         print("Downloading Pictures from URL:%s" % response.url)
         i = 0
@@ -737,11 +761,10 @@ class rssImageExtractor(scrapy.Spider):
         if self.alreadyNotDownloaded("comicVine", galCode):
             for imgUrl in imgUrls:
                 i += 1
-                imgFileName = galCode + str(i) +".jpg"
+                imgFileName = galCode + str(i) + ".jpg"
                 print(imgUrl)
                 self.downloadImg(imgUrl, "Art\\%s" % imgFileName)
             self.downloadCompleteRegister("comicVine", galCode)
-
 
     def ensure_dir(self, file_path):
         directory = os.path.dirname(file_path)

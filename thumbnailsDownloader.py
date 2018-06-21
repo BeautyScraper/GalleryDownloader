@@ -27,6 +27,10 @@ class rssImageExtractor(scrapy.Spider):
             for url in urls:
                 if "babesource.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnails)
+                if "puba.com" in url:
+                    spider = {}
+                    spider['url'] = url
+                    yield scrapy.Request(url=url[:-1], callback=self.pubaThumbs,meta=spider)
                 if "porncomix.info" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.porncomix)
                 if "r34anim" in url:
@@ -86,6 +90,22 @@ class rssImageExtractor(scrapy.Spider):
     def alreadyNotDownloaded(self, fileName, Id):
         return galleryCrawler.rssImageExtractor().alreadyNotDownloaded("Gallery\\" + fileName, Id)
 
+    def pubaThumbs(self, response):
+        websiteName = "pubaGallery"
+        requestUrl = response.meta['url']
+        # galNumber = re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", requestUrl)[1]
+        galNumber = requestUrl.split(".")[8]
+        temp = "-".join(response.css("title::text").extract()[0].split(" "))
+        imgName = temp + " " + galNumber +".jpg"
+        imgUrl = response.css("img[src*=thumb]::attr(src)").extract()[0]
+        if self.alreadyNotDownloaded(websiteName, imgName):
+            os.system("md NewBabes\\%s" % websiteName)
+            print("NewBabes\\%s\\%s and img link %s" % (websiteName, imgName, imgUrl))
+            urllib.request.urlretrieve(imgUrl, "NewBabes\\%s\\%s" % (websiteName, imgName))
+            self.setFileMeta(imgName, requestUrl.rstrip("\n"), websiteName)
+            # self.downloadThisGallery(formedUrl)
+            self.downloadCompleteRegister(websiteName, imgName)
+
     def downloadCompleteRegister(self, fileName, Id):
         return galleryCrawler.rssImageExtractor().downloadCompleteRegister("Gallery\\" + fileName, Id)
 
@@ -127,7 +147,7 @@ class rssImageExtractor(scrapy.Spider):
         if True:
             galleryLinks = response.css(".issue-grid>li>a::attr(href)").extract()
             imgLinks = response.css(".issue-grid>li>a>div>img::attr(src)").extract()
-            fileNames1 =  response.css(".issue-number::text").extract()
+            fileNames1 = response.css(".issue-number::text").extract()
             fileNames = []
             for imgL in fileNames1:
                 fileNames.append(imgL + ".jpg")
@@ -148,8 +168,8 @@ class rssImageExtractor(scrapy.Spider):
                 print("https://comicvine.gamespot.com" + links)
         # extraPages = response.css("a[href*=page]::attr(href)").extract()[-1]
         if "page=" not in response.url:
-            for i in range(1,10):
-                yield scrapy.Request(url=response.url+"?page="+str(i), callback=self.comicvineGood)
+            for i in range(1, 10):
+                yield scrapy.Request(url=response.url + "?page=" + str(i), callback=self.comicvineGood)
 
     def porncomix(self, response):
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
@@ -375,8 +395,6 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadCompleteRegister(websiteName + "gallery", links)
                 print("http://www.scoreland2.com" + links)
         #
-
-
 
     def babeShow(self, response):
         print("writing babeshow named:%s" % response.url)
