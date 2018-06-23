@@ -30,7 +30,8 @@ class rssImageExtractor(scrapy.Spider):
                 if "puba.com" in url:
                     spider = {}
                     spider['url'] = url
-                    yield scrapy.Request(url=url[:-1], callback=self.pubaThumbs,meta=spider)
+                    spider['download_maxsize'] = 1024 * 1024 * 3
+                    yield scrapy.Request(url=url[:-1], callback=self.pubaThumbs, meta=spider)
                 if "porncomix.info" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.porncomix)
                 if "r34anim" in url:
@@ -69,6 +70,8 @@ class rssImageExtractor(scrapy.Spider):
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
                 if "lyndaleigh.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
+                if "bskow.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.bsKow)
                 if "bound-cash.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnailsBoundCash)
                 if "scoreland.com" in url:
@@ -79,10 +82,9 @@ class rssImageExtractor(scrapy.Spider):
                         'galCodeFromImgExtractorRe': "content/DL02/(.*?)/"}
                     yield scrapy.Request(url=url[:-1], callback=self.findingGalCodeFromImage, meta=metaData)
                 if "devilsfilm.com" in url:
-                    metaData = {
-                        'Samplelink': "http://html.sxx.com/2/105/pics/@gallery@/nude/82_c1848_01.html?pr=8&su=1&ad=12950&pg=2",
-                        'galCodeFromImgExtractorRe': "photo_set/(.*?)/previews/"}
-                    yield scrapy.Request(url=url[:-1], callback=self.devilsFilm, meta=metaData)
+                    yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
+                if "blowpass.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
         except Exception as e:
             with open("logThumbnail.txt", "a+") as inF:
                 inF.write(str(e) + "\n")
@@ -91,12 +93,14 @@ class rssImageExtractor(scrapy.Spider):
         return galleryCrawler.rssImageExtractor().alreadyNotDownloaded("Gallery\\" + fileName, Id)
 
     def pubaThumbs(self, response):
+        if ".mp4" in response.url:
+            return
         websiteName = "pubaGallery"
         requestUrl = response.meta['url']
         # galNumber = re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", requestUrl)[1]
         galNumber = requestUrl.split(".")[8]
         temp = "-".join(response.css("title::text").extract()[0].split(" "))
-        imgName = temp + " " + galNumber +".jpg"
+        imgName = temp + " " + galNumber + ".jpg"
         imgUrl = response.css("img[src*=thumb]::attr(src)").extract()[0]
         if self.alreadyNotDownloaded(websiteName, imgName):
             os.system("md NewBabes\\%s" % websiteName)
@@ -118,12 +122,6 @@ class rssImageExtractor(scrapy.Spider):
         print(response.meta['galCodeFromImgExtractorRe'])
         self.modifyToGalleryLink(response, link, replacement)
 
-    def devilsFilm(self, response):
-        replacement = response.css("body").re("photo_set/(.*?)/previews/")
-        link = response.meta['Samplelink']
-        print(response.meta['galCodeFromImgExtractorRe'])
-        self.modifyToGalleryLink(response, link, replacement)
-
     def r34anime(self, response):
         links = [x.split("#")[0] for x in response.css(".post-thumbnail a::attr(href)").extract()]
         print(links)
@@ -140,6 +138,50 @@ class rssImageExtractor(scrapy.Spider):
                 fileNames.append(imgL.split("/")[-2] + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
+
+    def bsKow(self, response):
+        print("bsKow stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = [urllib.request.urljoin(response.url, x) for x in
+                            response.css("a[id*=tlcItem]::attr(href)").extract()]
+            imgLinks = response.css("img[id*=tlcImageItem]::attr(data-original)").extract()
+            galItems = response.css("div[class*=tlcActors]")
+            fileNames = []
+            i = 0
+            for imgL in galItems:
+                temp1 = " VS ".join(imgL.css("a::text").extract()).split(" ")
+                temp2 = "-".join(temp1) + " " + galleryLinks[i].split("/")[-1]
+                fileNames.append(temp2 + ".jpg")
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def DevilsFilm(self, response):
+        print("foxhq stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        galleryLinks = [urllib.request.urljoin(response.url, x) for x in
+                        response.css(".photosetImg::attr(href)").extract()]
+        for imgL in galleryLinks:
+            if self.alreadyNotDownloaded(websiteName, imgL):
+                yield scrapy.Request(url=imgL, priority=1, callback=self.DevilFilmHelper)
+                self.downloadCompleteRegister(websiteName, response.url)
+
+    def DevilFilmHelper(self, response):
+        websiteName = "DevilsFilmGallery"
+        requestUrl = response.url
+        # galNumber = re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", requestUrl)[1]
+        galNumber = requestUrl.split("/")[-1]
+        starName = " ".join(response.css(".actorsValue a::text").extract())
+        temp = "-".join(starName.split(" "))
+        imgName = temp + " " + galNumber + ".jpg"
+        imgUrl = response.css("a[href*=jpg]::attr(href)").extract()[0]
+        if self.alreadyNotDownloaded(websiteName, imgName):
+            os.system("md NewBabes\\%s" % websiteName)
+            print("NewBabes\\%s\\%s and img link %s" % (websiteName, imgName, imgUrl))
+            urllib.request.urlretrieve(imgUrl, "NewBabes\\%s\\%s" % (websiteName, imgName))
+            self.setFileMeta(imgName, requestUrl.rstrip("\n"), websiteName)
+            # self.downloadThisGallery(formedUrl)
+            self.downloadCompleteRegister(websiteName, imgName)
 
     def comicvine(self, response):
         print("comicvine stated")

@@ -36,20 +36,25 @@ class rssImageExtractor(scrapy.Spider):
         # self.urlDownload("http://t.umblr.com/redirect?z=https%3A%2F%2Fs1.webmshare.com%2FxO4Gb.webm&t=ZTY2ZDA1MjVjZTViMzgzOWNkYmY3MWU4OWM3MWFhMzhjMDAzMzQ2NCxnYVJmc2tUSg%3D%3D&b=t%3Ar19b_e4ZaWchfT4jGaBDFA&p=https%3A%2F%2Fbruh-sfm.tumblr.com%2Fpost%2F163066829714%2Flara-croft-rise-of-the-tomb-raider-webmwebm&m=1","newTest.mp4")
         for url in urls:
             if "evilangel.com" in url:
-
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.EvilAngel)
+            if "bskow.com" in url:
+                yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.Bskow)
             elif "puba.com" in url:
                 print("pubaOriginal " + url)
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.puba)
             elif "pubacash.com" in url:
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.puba)
+            elif "devilsfilm.com" in url:
+                yield scrapy.Request(url=url.rstrip("\n"), callback=self.DevilFilm)
+            elif "blowpass.com" in url:
+                yield scrapy.Request(url=url.rstrip("\n"), callback=self.BlowPass)
             elif "hbrowse.com" in url:
                 url1 = url.replace("hbrowse.com", "hbrowse.com/thumbnails")
                 yield scrapy.Request(url=url1.rstrip("\n"), callback=self.hBrowse)
             elif "ddfnetwork.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.ddf)
-            elif "ddfnetwork.com" in url:
-                yield scrapy.Request(url=url[:-1], callback=self.ddf)
+            elif "brazzers.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.Brazzer)
             elif "indianmasala" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.indianMasala)
             elif "phdcash.com" in url:
@@ -496,7 +501,7 @@ class rssImageExtractor(scrapy.Spider):
         if self.alreadyNotDownloaded("puba", imgCode):
             for imgUrl in imgUrls:
                 i += 1
-                imgFileName = imgCode +" "+ str(i) + ".jpg"
+                imgFileName = imgCode + " " + str(i) + ".jpg"
                 # imgUrl = self.relativeToAbsoulute(response, imgUrl)
                 print(imgUrl)
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
@@ -618,6 +623,20 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("dirtynakedpics", response.url.split("/")[-2])
 
+    def Brazzer(self, response):
+        print("Downloading Pictures from URL:%s" % response.url)
+        imgUrls = [urllib.request.urljoin(response.url, x) for x in response.css("a").re("href=\"([^\"]*?\.jpg)\"")]
+        i = 0
+        galName = response.css("title").re("<title>(.*?)<")[0].replace("Free Video With", "Me Chudengi").replace(
+            " - Brazzers Official", "")
+        if self.alreadyNotDownloaded("Brazzer", galName):
+            for imgUrl in imgUrls:
+                i += 1
+                imgFileName = galName + " " + str(i) + ".jpg"
+                print(imgUrl)
+                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadCompleteRegister("Brazzer", galName)
+
     def japanesebeauties(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
         imgUrls = response.css("a").re("href=\"([^\"]*jpg)\"")
@@ -658,6 +677,69 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("evilAngel", response.url)
         thirdPartyUrlTemplate = "http://html.sxx.com/2/128/pics/@@/nude/153_c1848_01.html?pr=8&su=1&ad=12950"
+        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
+        spiderMeta = {}
+        spiderMeta["galCode"] = galCode
+        spiderMeta["galleryName"] = starName
+        yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
+
+    def Bskow(self, response):
+        print("Bskow")
+        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
+        i = 0
+        starName = " and ".join(response.css(".pgTitleActorsText").re("title=\"(.*?)\"")) + " "
+        galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
+        if self.alreadyNotDownloaded("Bskow", response.url):
+            for imgUrl in imgUrls:
+                # formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
+                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + ".jpg"
+                # print(formedUrl)
+
+                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+            self.downloadCompleteRegister("Bskow", response.url)
+        thirdPartyUrlTemplate = "http://html.sxx.com/2/202/pics/@@/nude/491_c1848_01.html?pr=8&su=1&ad=12950"
+        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
+        spiderMeta = {}
+        spiderMeta["galCode"] = galCode
+        spiderMeta["galleryName"] = starName
+        yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
+
+    def DevilFilm(self, response):
+        print("DevilFilm")
+        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
+        i = 0
+        starName = " And ".join(response.css(".actorsValue a::text").extract()) + " "
+        galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
+        if self.alreadyNotDownloaded("DevilFilm", response.url):
+            for imgUrl in imgUrls:
+                # formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
+                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + ".jpg"
+                # print(formedUrl)
+
+                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+            self.downloadCompleteRegister("DevilFilm", response.url)
+        thirdPartyUrlTemplate = "http://html.sxx.com/2/105/pics/@@/nude/82_c1848_01.html?pr=8&su=1&ad=12950&pg=2"
+        thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
+        spiderMeta = {}
+        spiderMeta["galCode"] = galCode
+        spiderMeta["galleryName"] = starName
+        yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
+
+    def BlowPass(self, response):
+        print("DevilFilm")
+        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
+        i = 0
+        starName = " And ".join(response.css(".actorsValue a::text").extract()) + " "
+        galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
+        if self.alreadyNotDownloaded("BlowPass", response.url):
+            for imgUrl in imgUrls:
+                # formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
+                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + ".jpg"
+                # print(formedUrl)
+
+                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+            self.downloadCompleteRegister("BlowPass", response.url)
+        thirdPartyUrlTemplate = "http://html.blazingmovies.com/11/14/pics/@@/nude/367_c1848_01.html?pr=12&su=1&ad=12950"
         thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
         spiderMeta = {}
         spiderMeta["galCode"] = galCode
