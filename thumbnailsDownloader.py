@@ -27,6 +27,8 @@ class rssImageExtractor(scrapy.Spider):
             for url in urls:
                 if "babesource.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnails)
+                if "brazzers.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.brazzers)
                 if "puba.com" in url:
                     spider = {}
                     spider['url'] = url
@@ -126,6 +128,23 @@ class rssImageExtractor(scrapy.Spider):
         links = [x.split("#")[0] for x in response.css(".post-thumbnail a::attr(href)").extract()]
         print(links)
         self.writeNewLinks(response, links)
+
+    def brazzers(self, response):
+        print("foxhq stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = [urllib.request.urljoin(response.url, x) for x in response.css(".sample-picker::attr(href)").extract()]
+            imgLinks = [urllib.request.urljoin(response.url, x) for x in  response.css(".sample-picker img:first-of-type::attr(data-src)").extract()]
+            galItems = response.css("div[class*=model-names]")
+            fileNames = []
+            i = 0
+            for imgL in galItems:
+                temp1 = " VS ".join(imgL.css("a::text").extract()).split(" ")
+                temp2 = "-".join(temp1) + " " + galleryLinks[i].split("/")[-2]
+                fileNames.append(temp2 + ".jpg")
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
 
     def foxHQ(self, response):
         print("foxhq stated")
