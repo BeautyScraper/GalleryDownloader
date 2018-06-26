@@ -77,7 +77,7 @@ class rssImageExtractor(scrapy.Spider):
                 if "bound-cash.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnailsBoundCash)
                 if "scoreland.com" in url:
-                    yield scrapy.Request(url=url[:-1], callback=self.downloadThumbnailsScoreland)
+                    yield scrapy.Request(url=url[:-1], callback=self.scoreLand)
                 if "spizoo.com" in url:
                     metaData = {
                         'Samplelink': "http://galleries.spizoo.com/pictures/@gallery@/pics.php?nats=MzQuMi4xMi4yOC4wLjE2MTUyLjAuMC4w",
@@ -133,8 +133,10 @@ class rssImageExtractor(scrapy.Spider):
         print("foxhq stated")
         websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
         if True:
-            galleryLinks = [urllib.request.urljoin(response.url, x) for x in response.css(".sample-picker::attr(href)").extract()]
-            imgLinks = [urllib.request.urljoin(response.url, x) for x in  response.css(".sample-picker img:first-of-type::attr(data-src)").extract()]
+            galleryLinks = [urllib.request.urljoin(response.url, x) for x in
+                            response.css(".sample-picker::attr(href)").extract()]
+            imgLinks = [urllib.request.urljoin(response.url, x) for x in
+                        response.css(".sample-picker img:first-of-type::attr(data-src)").extract()]
             galItems = response.css("div[class*=model-names]")
             fileNames = []
             i = 0
@@ -144,7 +146,6 @@ class rssImageExtractor(scrapy.Spider):
                 fileNames.append(temp2 + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
-
 
     def foxHQ(self, response):
         print("foxhq stated")
@@ -212,6 +213,23 @@ class rssImageExtractor(scrapy.Spider):
             fileNames = []
             for imgL in fileNames1:
                 fileNames.append(imgL + ".jpg")
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def scoreLand(self, response):
+        print("comicvine stated")
+        websiteName = self.properName(response.url.split("/")[2])
+        if True:
+            galleryLinks = [urllib.request.urljoin(response.url, x) for x in
+                            response.css("a").re("href=\"(.*?/\d\d\d\d\d/.*)?\"")]
+            imgLinks = [urllib.request.urljoin(response.url, x) for x in
+                        response.css("img[src*=modeldir]::attr(src)").extract()]
+            fileNames1 = response.css("div.info>.i-model::text").extract()
+            fileNames = []
+            i = 0
+            for imgL in fileNames1:
+                fileNames.append(imgL.replace(" ", "-") + " " + galleryLinks[i].split("/")[-2] + ".jpg")
+                i += 1
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
 
@@ -472,7 +490,8 @@ class rssImageExtractor(scrapy.Spider):
 
     def downloadThumbnailsScoreland(self, response):
         print("writing ScoredGallery named:%s" % response.url)
-        galleryLinks = response.css("a").re("href=\"(.*?/\d\d\d\d\d/.*)?\"")
+        galleryLinks = [urllib.request.urljoin(response.url, x) for x in
+                        response.css("a").re("href=\"(.*?/\d\d\d\d\d/.*)?\"")]
         i = 0
         # t = open("galleryLinks.opml", "a")
         for links in galleryLinks:

@@ -219,6 +219,10 @@ class rssImageExtractor(scrapy.Spider):
             os.system(wholeCommand)
             self.downloadCompleteRegister("videos", filename)
 
+    def downloadImgWithIDM(self, imgUrl, Path):
+        filename = Path.split("\\")[-1]
+        self.downloadThisVideo(10,r"C:\GalImgs\BabesImgs",filename,imgUrl)
+
     def extractFromBodyRe(self, response, codeRe):
         response.css("body").re(codeRe)
 
@@ -504,7 +508,8 @@ class rssImageExtractor(scrapy.Spider):
                 imgFileName = imgCode + " " + str(i) + ".jpg"
                 # imgUrl = self.relativeToAbsoulute(response, imgUrl)
                 print(imgUrl)
-                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("puba", imgCode)
             # self.downloadCompleteRegister("puba2", "@" + re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", t)[1] + "@")
 
@@ -537,7 +542,8 @@ class rssImageExtractor(scrapy.Spider):
             imgFileName = imgUrls.split("/")[-1]
             self.ensure_dir("Art\\")
             if not self.downloadImg(imgUrls, "Art\\%s" % imgFileName):
-                break
+                pass
+                # break
 
     def ScoreLand(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -548,7 +554,9 @@ class rssImageExtractor(scrapy.Spider):
                 i += 1
                 imgFileName = response.css("title").re("<title>(.*?)<")[0] + str(i) + ".jpg"
                 formedUrl = imgUrl.replace("_tn.jpg", ".jpg")
-                print(imgUrl)
+                if "http" not in formedUrl:
+                    formedUrl = "http:" + formedUrl
+                print(formedUrl)
 
                 self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("ScoreLand", response.css("title").re("<title>(.*?)<")[0])
@@ -634,7 +642,8 @@ class rssImageExtractor(scrapy.Spider):
                 i += 1
                 imgFileName = galName + " " + str(i) + ".jpg"
                 print(imgUrl)
-                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
                 self.downloadCompleteRegister("Brazzer", galName)
 
     def japanesebeauties(self, response):
@@ -768,7 +777,8 @@ class rssImageExtractor(scrapy.Spider):
                     formedUrl = temp + formedUrl
                 print(formedUrl)
                 # imgFileName = "pending " + imgFileName
-                self.downloadImg(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
+                # self.downloadImg(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
+                self.downloadImgWithIDM(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
             self.downloadCompleteRegister(websiteName, galleryCode)
 
     def DevilsFilm(self, response):
