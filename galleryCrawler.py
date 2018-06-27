@@ -53,6 +53,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url1.rstrip("\n"), callback=self.hBrowse)
             elif "ddfnetwork.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.ddf)
+            elif "naughtyamerica.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.naughtyamerica)
             elif "brazzers.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.Brazzer)
             elif "indianmasala" in url:
@@ -173,6 +175,43 @@ class rssImageExtractor(scrapy.Spider):
                 inF.write(failure.request.url + "\n")
             # self.removeLine("instaLinks.opml", failure.request.url+"/"\)
 
+    def convertToAbsoulte(self, urls, response):
+        url = [urllib.request.urljoin(response.url, x) for x in urls]
+        return url
+
+    def naughtyamerica(self, response):
+        imgUrls = self.convertToAbsoulte(response.css(".fancybox::attr(href)").extract(), response)
+        galCode = response.css("title::text").extract()[0].replace(" - Naughty America 4K Porn Videos", "") + \
+                  re.search("-([^-]*?)\?", response.url)[1]
+        fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
+        fhgUrlTemp = "https://galleries.naughtyamerica.com/v3/responsive-unified-pic-gallery/@@"
+        replaceWith = response.url.split("/")[-1].split("?")[0]
+        fhgUrl = fhgUrlTemp.replace("@@", replaceWith)
+        print(fhgUrl)
+        yield scrapy.Request(url=fhgUrl, callback=self.naughtyAmericaFHG, priority=1)
+
+    def naughtyAmericaFHG(self, response):
+        print("getting to FHG")
+        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
+        galCode = "ChuchiWali " + response.css("title::text").extract()[0].replace(" - Naughty America", " ") + " " + \
+                  response.url.split("-")[-1].split("?")[0]
+        fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
+
+    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode=""):
+        websiteName = self.properName(response.url.split("/")[2])
+        if galCode == "":
+            galCode = response.url
+        if self.alreadyNotDownloaded(websiteName, galCode):
+            for i in range(len(imgUrls)):
+                formedUrl = imgUrls[i]
+                if "http" not in imgUrls[i]:
+                    formedUrl = urllib.request.urljoin(response.url, imgUrls[i])
+                # self.downloadImg(formedUrl, "BabesImgs\\%s" % fileNames[i])
+                self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % fileNames[i])
+            self.downloadCompleteRegister(websiteName, galCode)
+
     def SingleImage(self, response):
         print("Entering a page to download a single image")
         imgUrl = response.css("img[src*=%s]::attr(src)" % (response.meta["filterBySrc"])).extract()
@@ -221,7 +260,7 @@ class rssImageExtractor(scrapy.Spider):
 
     def downloadImgWithIDM(self, imgUrl, Path):
         filename = Path.split("\\")[-1]
-        self.downloadThisVideo(10,r"C:\GalImgs\BabesImgs",filename,imgUrl)
+        self.downloadThisVideo(10, r"C:\GalImgs\BabesImgs", filename, imgUrl)
 
     def extractFromBodyRe(self, response, codeRe):
         response.css("body").re(codeRe)

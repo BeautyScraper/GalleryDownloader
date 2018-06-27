@@ -70,6 +70,8 @@ class rssImageExtractor(scrapy.Spider):
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
                 if "jenniferjade" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
+                if "naughtyamerica.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.naughtyamerica)
                 if "lyndaleigh.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
                 if "bskow.com" in url:
@@ -487,6 +489,26 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadThisGallery(links)
                 self.downloadCompleteRegister("BabeShowGallery", "@" + links.split("/")[-1].split(".")[0] + "@")
             # print("http://www.scoreland.com" + links)
+
+    def convertToAbsoulte(self, urls, response):
+        url = [urllib.request.urljoin(response.url, x) for x in urls]
+        return url
+
+
+    def naughtyamerica(self,response):
+        print("naughtyamerica stated")
+        websiteName = self.properName(response.url.split("/")[2])
+        if True:
+            galleryLinks = response.css(".grid-item-large>a:first-of-type::attr(href)").extract()
+            imgLinks1 =  response.css(".grid-item-large>a:first-of-type>img::attr(src)").extract()
+            imgLinks = self.convertToAbsoulte(imgLinks1,response)
+            fileNames1 = response.css(".model-name::text").extract()
+            fileNames = []
+            for imgL in fileNames1:
+                fileNames.append("-".join(imgL.split(" ")) + ".jpg")
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
 
     def downloadThumbnailsScoreland(self, response):
         print("writing ScoredGallery named:%s" % response.url)
