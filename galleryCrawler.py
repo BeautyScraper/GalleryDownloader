@@ -47,7 +47,7 @@ class rssImageExtractor(scrapy.Spider):
             elif "devilsfilm.com" in url:
                 yield scrapy.Request(url=url.rstrip("\n"), callback=self.DevilFilm)
             elif "blowpass.com" in url:
-                yield scrapy.Request(url=url.rstrip("\n"), callback=self.BlowPass)
+                yield scrapy.Request(url=url.rstrip("\n"), callback=self.xxxpass)
             elif "hbrowse.com" in url:
                 url1 = url.replace("hbrowse.com", "hbrowse.com/thumbnails")
                 yield scrapy.Request(url=url1.rstrip("\n"), callback=self.hBrowse)
@@ -59,6 +59,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.Brazzer)
             elif "indianmasala" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.indianMasala)
+            elif "blowpass.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.xxxpass)
             elif "phdcash.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.photodromm)
             elif "dirtyhardcash.com" in url:
@@ -92,6 +94,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.download8Muses)
             elif "porngals4" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.porngals4)
+            elif "actiongirls.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.ActionGirl)
             elif "porncomix.info" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.downloadPorncomix)
             elif "lucyzara.com" in url:
@@ -199,7 +203,7 @@ class rssImageExtractor(scrapy.Spider):
         fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
         self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
 
-    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode=""):
+    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode="",static = True):
         websiteName = self.properName(response.url.split("/")[2])
         if galCode == "":
             galCode = response.url
@@ -208,8 +212,10 @@ class rssImageExtractor(scrapy.Spider):
                 formedUrl = imgUrls[i]
                 if "http" not in imgUrls[i]:
                     formedUrl = urllib.request.urljoin(response.url, imgUrls[i])
-                # self.downloadImg(formedUrl, "BabesImgs\\%s" % fileNames[i])
-                self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % fileNames[i])
+                if static:
+                    self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % fileNames[i])
+                else:
+                    self.downloadImg(formedUrl, "BabesImgs\\%s" % fileNames[i])
             self.downloadCompleteRegister(websiteName, galCode)
 
     def SingleImage(self, response):
@@ -402,6 +408,18 @@ class rssImageExtractor(scrapy.Spider):
             content.replace(line, "")
             f.write(content)
 
+    def defaultTemplate(self, response):
+        imgUrls = response.css("a[href*=\.jp]::attr(href)").extract()
+        galCode = response.css("title::text").extract()[0]
+        fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
+
+    def ActionGirl(self, response):
+        imgUrls = response.css("a[href*=\.jp]::attr(href)").extract()
+        galCode = " ".join(response.url.split("/")[3:5])
+        fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
+
     def indianMasala(self, response):
         print(response.url)
 
@@ -463,7 +481,8 @@ class rssImageExtractor(scrapy.Spider):
                 i += 1
                 imgFileName = response.css("title").re("<title>(.*?)<")[0] + str(i) + ".jpg"
                 print(imgUrl)
-                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("babeGallery", response.css("title").re("<title>(.*?)<")[0])
 
     def pentHouse(self, response):
@@ -621,7 +640,8 @@ class rssImageExtractor(scrapy.Spider):
                 i += 1
                 imgFileName = self.properName(response.css("title").re("<title>(.*?)<")[0] + str(i) + ".jpg")
                 print(imgUrl)
-                self.downloadImg("https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
+                # self.downloadImg("https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM("https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("ddf", response.css("title").re("<title>(.*?)<")[0])
 
     def photodromm(self, response):
@@ -773,26 +793,21 @@ class rssImageExtractor(scrapy.Spider):
         spiderMeta["galleryName"] = starName
         yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
 
-    def BlowPass(self, response):
+    def xxxpass(self, response):
         print("DevilFilm")
-        imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
-        i = 0
+        imgUrls = response.css("a[href*=\.jp]::attr(href)").extract()
         starName = " And ".join(response.css(".actorsValue a::text").extract()) + " "
+        galCode1 = response.css("title::text").extract()[0].replace(" - Blowpass Photoset", " me BUR dengi ") + starName
+        fileNames = [galCode1 + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
         galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
-        if self.alreadyNotDownloaded("BlowPass", response.url):
-            for imgUrl in imgUrls:
-                # formedUrl = imgUrl.replace("001.jpg", str(i).zfill(3) + ".jpg")
-                imgFileName = starName + imgUrl.split("/")[-1].split(".")[0] + ".jpg"
-                # print(formedUrl)
-
-                self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
-            self.downloadCompleteRegister("BlowPass", response.url)
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode,static = False)
         thirdPartyUrlTemplate = "http://html.blazingmovies.com/11/14/pics/@@/nude/367_c1848_01.html?pr=12&su=1&ad=12950"
         thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
         spiderMeta = {}
         spiderMeta["galCode"] = galCode
         spiderMeta["galleryName"] = starName
         yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
+
 
     def thirdParty(self, response):
         galleryCode = response.meta["galCode"]
