@@ -23,3 +23,4 @@
 [WinError 3] The system cannot find the path specified: 'incomplete\\comics\\Velamma83SpaDayPornComics152\\1.jpg' -> 'comics\\Velamma83SpaDayPornComics152\\1.jpg'
 [WinError 3] The system cannot find the path specified: 'incomplete\\comics\\Velamma83SpaDayPornComics152\\1.jpg' -> 'comics\\Velamma83SpaDayPornComics152\\1.jpg'
 [WinError 183] Cannot create a file when that file already exists: 'incomplete\\BabesImgs\\Monique Alexander  Damon Dice in Dirty Wives Club22859 0.jpg' -> 'BabesImgs\\Monique Alexander  Damon Dice in Dirty Wives Club22859 0.jpg'
+[WinError 2] The system cannot find the file specified: 'incomplete\\BabesImgs\\Eva-Notty 35684 1.jpg' -> 'BabesImgs\\Eva-Notty 35684 1.jpg'

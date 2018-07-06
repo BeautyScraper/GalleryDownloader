@@ -24,9 +24,9 @@ class rssImageExtractor(scrapy.Spider):
             filename = sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            # filename = "galleryLinks.opml"
+            filename = "galleryLinks.opml"
             # filename = "StaticLinks.opml"
-            filename = "Test.opml"
+            # filename = "Test.opml"
         # filename = "foxHQ.opml"
         # filename = "puba.opml"
         t = open(filename, "r+")
@@ -79,9 +79,7 @@ class rssImageExtractor(scrapy.Spider):
                                      meta={"search": "\/tn\/", "replace": "/full/", "index": -2,
                                            "galleryCodeFromURL": code})
             elif "scoreland2.com" in url:
-                code = " ".join(url.split("/")[-3:-1])
-                yield scrapy.Request(url=url[:-1], callback=self.thumbToLarge,
-                                     meta={"search": "_tn", "replace": "", "index": -2, "galleryCodeFromURL": code})
+                yield scrapy.Request(url=url[:-1], callback=self.ScoreLand)
             elif "alluringvixens.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.alluringvixens)
             elif "foxhq.com" in url:
@@ -203,7 +201,7 @@ class rssImageExtractor(scrapy.Spider):
         fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
         self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
 
-    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode="",static = True):
+    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode="", static=True):
         websiteName = self.properName(response.url.split("/")[2])
         if galCode == "":
             galCode = response.url
@@ -703,7 +701,8 @@ class rssImageExtractor(scrapy.Spider):
                 print(imgUrl)
                 # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
                 self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadCompleteRegister("Brazzer", galName)
+            self.downloadCompleteRegister("Brazzer", galName)
+            self.removeLine(response.url, r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
     def japanesebeauties(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -800,7 +799,7 @@ class rssImageExtractor(scrapy.Spider):
         galCode1 = response.css("title::text").extract()[0].replace(" - Blowpass Photoset", " me BUR dengi ") + starName
         fileNames = [galCode1 + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
         galCode = imgUrls[0].split("/")[-1].split(".")[0].split("_")[0]
-        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode,static = False)
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode, static=False)
         thirdPartyUrlTemplate = "http://html.blazingmovies.com/11/14/pics/@@/nude/367_c1848_01.html?pr=12&su=1&ad=12950"
         thirdPartyUrl = thirdPartyUrlTemplate.replace("@@", galCode)
         spiderMeta = {}
@@ -808,6 +807,15 @@ class rssImageExtractor(scrapy.Spider):
         spiderMeta["galleryName"] = starName
         yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
 
+    def removeLine(self, needleLine, filename):
+        print("needle = %s filename = %s" % (needleLine, filename))
+        temp = open(filename, "r")
+        lines = temp.read()
+        temp.close()
+        lines = lines.replace(needleLine, "")
+        temp = open(filename, "w")
+        temp.write(lines)
+        temp.close()
 
     def thirdParty(self, response):
         galleryCode = response.meta["galCode"]
@@ -911,6 +919,8 @@ class rssImageExtractor(scrapy.Spider):
                 print(imgUrl)
                 self.downloadImg(imgUrl, "Art\\%s" % imgFileName)
             self.downloadCompleteRegister("comicVine", galCode)
+            self.removeLine(response.url.replace("gamespot.com/", "gamespot.com/new-comics/") + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
+            self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
     def ensure_dir(self, file_path):
         directory = os.path.dirname(file_path)
