@@ -24,9 +24,9 @@ class rssImageExtractor(scrapy.Spider):
             filename = sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            filename = "galleryLinks.opml"
+            # filename = "galleryLinks.opml"
             # filename = "StaticLinks.opml"
-            # filename = "Test.opml"
+            filename = "Test.opml"
         # filename = "foxHQ.opml"
         # filename = "puba.opml"
         t = open(filename, "r+")
@@ -227,7 +227,7 @@ class rssImageExtractor(scrapy.Spider):
                 imgFileName = response.css("title::text").extract()[0]
             self.downloadImg(Iurl, "Expande\\%s" % imgFileName)
 
-    def downloadCompleteRegister(self, fileName, Id):
+    def downloadCompleteRegister(self, fileName, Id,removeLine = False):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         print("Writing file name %s for id %s" % (fileName, Id))
         try:
@@ -482,6 +482,7 @@ class rssImageExtractor(scrapy.Spider):
                 # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
                 self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("babeGallery", response.css("title").re("<title>(.*?)<")[0])
+            self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
     def pentHouse(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -598,8 +599,8 @@ class rssImageExtractor(scrapy.Spider):
             imgFileName = imgUrls.split("/")[-1]
             self.ensure_dir("Art\\")
             if not self.downloadImg(imgUrls, "Art\\%s" % imgFileName):
-                pass
-                # break
+                # pass
+                break
 
     def ScoreLand(self, response):
         print("Downloading Pictures from URL:%s" % response.url)
@@ -613,9 +614,10 @@ class rssImageExtractor(scrapy.Spider):
                 if "http" not in formedUrl:
                     formedUrl = "http:" + formedUrl
                 print(formedUrl)
-
-                self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
+                # self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("ScoreLand", response.css("title").re("<title>(.*?)<")[0])
+            self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
     def porngals4(self, response):
         print("Downloading Pictures from URL:%s" % response.url)

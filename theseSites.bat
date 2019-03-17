@@ -1,5 +1,6 @@
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "deviantart.com" >>"D:\Developed\Automation\GalleryDownloader\StaticLinks.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "evilangel.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
+python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "comicvine.gamespot.com" >>"D:\Developed\Automation\GalleryDownloader\babesource.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "puba.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "pubacash.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "ddfnetwork.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"

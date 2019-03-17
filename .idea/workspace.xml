@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/thumbnailsDownloader.py" line="512" />
+    <bookmark url="file://$PROJECT_DIR$/thumbnailsDownloader.py" line="523" />
     <bookmark url="file://$PROJECT_DIR$/galleryCrawler.py" line="204" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96bc449c-d4bd-4bbb-8195-c887a1d23a22" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StaticLinks.opml" beforeDir="false" afterPath="$PROJECT_DIR$/StaticLinks.opml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babesource - Copy.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource - Copy.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/babesource.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bulkthumbs.opml" beforeDir="false" afterPath="$PROJECT_DIR$/bulkthumbs.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/galleryCrawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/galleryCrawler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/heartQueens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/heartQueens.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/AzianiGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/AzianiGallery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/BabeShowGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/BabeShowGallery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/BoundCashGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/BoundCashGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/EvilAngelGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/EvilAngelGallery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/UUpN-WGQgGsOrXm7nHXDdTDAYoutube.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/UUpN-WGQgGsOrXm7nHXDdTDAYoutube.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/alluringVixenGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/alluringVixenGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/babesourceGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/babesourceGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/euroticaGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/euroticaGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.foxhq.comGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.foxhq.comGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/www.googleapis.comGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.googleapis.comGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.scoreland2.comgallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.scoreland2.comgallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/ScoreLand.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/ScoreLand.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/alluringvixens.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/alluringvixens.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/aziani.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/aziani.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/babeGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/babeGallery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/babeshowpromo.co.uk.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/babeshowpromo.co.uk.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/eurotica.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/eurotica.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/galleriesalluringvixenscom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/galleriesalluringvixenscom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/filewise/mediababesourcecom.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/orig00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/orig00deviantartnet.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/thumbsazianicom81.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/thumbsazianicom81.txt" afterDir="false" />
@@ -33,11 +42,13 @@
       <change beforePath="$PROJECT_DIR$/list/filewise/wwwfoxhqcom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/wwwfoxhqcom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/wwwindianmasalacom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/wwwindianmasalacom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/lucyZara.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/lucyZara.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/porncomix.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/porncomix.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/videos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/videos.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/www.foxhq.com.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/www.foxhq.com.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/www.indianmasala.com.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/www.indianmasala.com.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logRenaming.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logRenaming.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/theseSites.bat" beforeDir="false" afterPath="$PROJECT_DIR$/theseSites.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnailsDownloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/thumbnailsDownloader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -48,11 +59,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="galleryCrawler.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="galleryCrawler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="922" column="84" lean-forward="true" selection-start-line="922" selection-start-column="84" selection-end-line="922" selection-end-column="84" />
+            <state relative-caret-position="17">
+              <caret line="632" selection-start-line="632" selection-end-line="632" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -63,7 +74,7 @@
       <file leaf-file-name="alreadyDone.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../python/alreadyDone.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
+            <state relative-caret-position="102">
               <caret line="8" column="16" selection-start-line="6" selection-start-column="4" selection-end-line="8" selection-end-column="16" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
@@ -128,11 +139,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="thumbnailsDownloader.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="thumbnailsDownloader.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1071">
-              <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
+            <state relative-caret-position="287">
+              <caret line="320" column="40" selection-start-line="320" selection-start-column="40" selection-end-line="320" selection-end-column="40" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -151,15 +162,12 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>keep</find>
-      <find>checkY</find>
       <find>proper</find>
       <find>ddf2</find>
       <find>evil</find>
       <find>links</find>
       <find>car</find>
       <find>ride</find>
-      <find>trace</find>
       <find>foxhq</find>
       <find>vine</find>
       <find>setting</find>
@@ -170,7 +178,7 @@
       <find>bsk</find>
       <find>link</find>
       <find>foxHq</find>
-      <find />
+      <find>x in</find>
       <find>galleries.</find>
       <find>naught</find>
       <find>website</find>
@@ -181,6 +189,9 @@
       <find>comic</find>
       <find>comicv</find>
       <find>brazzer</find>
+      <find>conte</find>
+      <find>trace</find>
+      <find>youtu</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,8 +203,8 @@
         <option value="$PROJECT_DIR$/../ImgSelector/Harlotation.py" />
         <option value="$PROJECT_DIR$/../python/duplicateLineRem.py" />
         <option value="$PROJECT_DIR$/../sinisterGramV2/sinSpider.py" />
-        <option value="$PROJECT_DIR$/thumbnailsDownloader.py" />
         <option value="$PROJECT_DIR$/galleryCrawler.py" />
+        <option value="$PROJECT_DIR$/thumbnailsDownloader.py" />
       </list>
     </option>
   </component>
@@ -209,6 +220,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -220,10 +232,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="last.edited.regexp" value="https://www.youtube.com/user/dsfsfd" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -243,7 +255,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.galleryCrawler">
+  <component name="RunManager" selected="Python.thumbnailsDownloader">
     <configuration name="Harlotation" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="GalleryDownloader" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -343,8 +355,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.galleryCrawler" />
         <item itemvalue="Python.thumbnailsDownloader" />
+        <item itemvalue="Python.galleryCrawler" />
         <item itemvalue="Python.sinSpider" />
         <item itemvalue="Python.duplicateLineRem" />
         <item itemvalue="Python.Harlotation" />
@@ -495,16 +507,23 @@
       <option name="project" value="LOCAL" />
       <updated>1530453356756</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="remove lines">
+      <created>1530851715355</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1530851715355</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32913387" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32913387" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3288889" />
@@ -518,6 +537,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -566,7 +586,8 @@
     <MESSAGE value="idm Support" />
     <MESSAGE value="naughty America" />
     <MESSAGE value="almost everyTHing with iDM" />
-    <option name="LAST_COMMIT_MESSAGE" value="almost everyTHing with iDM" />
+    <MESSAGE value="remove lines" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove lines" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1029,19 +1050,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../python/alreadyDone.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
+        <state relative-caret-position="102">
           <caret line="8" column="16" selection-start-line="6" selection-start-column="4" selection-end-line="8" selection-end-column="16" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
@@ -1051,8 +1062,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="922" column="84" lean-forward="true" selection-start-line="922" selection-start-column="84" selection-end-line="922" selection-end-column="84" />
+        <state relative-caret-position="17">
+          <caret line="632" selection-start-line="632" selection-end-line="632" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="320" column="40" selection-start-line="320" selection-start-column="40" selection-end-line="320" selection-end-column="40" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

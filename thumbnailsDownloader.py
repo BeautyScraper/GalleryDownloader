@@ -6,7 +6,7 @@ import galleryCrawler
 import os
 import pickle
 import sys
-
+import unicodedata
 
 class rssImageExtractor(scrapy.Spider):
     name = "quotes"
@@ -206,7 +206,7 @@ class rssImageExtractor(scrapy.Spider):
             self.downloadCompleteRegister(websiteName, imgName)
 
     def comicvine(self, response):
-        print("comicvine stated")
+        print("comicvine started")
         websiteName = self.properName(response.url.split("/")[2])
         if True:
             galleryLinks = response.css(".issue-grid>li>a::attr(href)").extract()
@@ -214,7 +214,8 @@ class rssImageExtractor(scrapy.Spider):
             fileNames1 = response.css(".issue-number::text").extract()
             fileNames = []
             for imgL in fileNames1:
-                fileNames.append(imgL + ".jpg")
+                imgL1 = unicodedata.normalize('NFKD', imgL).encode('ascii','ignore')
+                fileNames.append(str(imgL1) + ".jpg")
             self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
             self.downloadCompleteRegister(websiteName, response.url)
 
@@ -269,10 +270,22 @@ class rssImageExtractor(scrapy.Spider):
             # self.downloadCompleteRegister(websiteName, response.url)
 
     def youtube_fetch_username(self, url):
-        print("youtube")
-        userName = re.search("user/(.*?)[/]?$", url)[1]
+        print("youtubexxxx")
+        channel = False
+        if re.search("user/(.*?)[/]?$", url):
+            print("youtubexxxx")
+            userName = re.search("user/(.*?)[/]?$", url)[1]
+        if re.search("channel/(.*?)[/]?$", url) != []:
+            userName = re.search("channel/(.*?)[/]?$", url)[1]
+            channel = True
+        print("googleApiUrl")
         googleApiUrl = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=%s&key=%s" % (
             userName, "AIzaSyCkuJYk8_AMFBtD6zZtPF9nXRi7uJRgZyo")
+        if(channel):
+            googleApiUrl = googleApiUrl.replace("forUsername","id")
+
+
+        print(googleApiUrl)
         return googleApiUrl
 
         # response.css("body").re("\"id\" *: *\"(.*?)\"")
@@ -309,7 +322,6 @@ class rssImageExtractor(scrapy.Spider):
         else:
             googleApiUrl = re.sub("\&pageToken=.*$", urlPart, response.url)
             print("Keep it uptube" + googleApiUrl)
-
         yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
 
     def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
