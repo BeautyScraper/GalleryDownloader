@@ -275,7 +275,7 @@ class rssImageExtractor(scrapy.Spider):
         if re.search("user/(.*?)[/]?$", url):
             print("youtubexxxx")
             userName = re.search("user/(.*?)[/]?$", url)[1]
-        if re.search("channel/(.*?)[/]?$", url) != []:
+        if re.search("channel/(.*?)[/]?$", url):
             userName = re.search("channel/(.*?)[/]?$", url)[1]
             channel = True
         print("googleApiUrl")
