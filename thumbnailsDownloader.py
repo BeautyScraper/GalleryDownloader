@@ -295,7 +295,7 @@ class rssImageExtractor(scrapy.Spider):
         print(id)
         googleApiUrl = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=%s&maxResults=50&key=%s" % (
             id, "AIzaSyCkuJYk8_AMFBtD6zZtPF9nXRi7uJRgZyo")
-        print("CheckYoutube" + googleApiUrl)
+        print("CheckYoutube " + googleApiUrl)
         yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
 
     def startYoutubeThumbnails(self, response):
@@ -303,7 +303,7 @@ class rssImageExtractor(scrapy.Spider):
         if response.css("body").re("\"nextPageToken\" *: *\"(.*?)\""):
             nextPageToken = response.css("body").re("\"nextPageToken\" *: *\"(.*?)\"")[0]
         channelId = re.search("\&playlistId=(.*?)\&", response.url)[1] + "Youtube"
-        if self.alreadyNotDownloaded(channelId, nextPageToken) or nextPageToken == "":
+        if self.alreadyNotDownloaded(channelId, nextPageToken) or nextPageToken == "" or response.css("body").re("\"prevPageToken\" *: *\"(.*?)\"") == []:
             thumbLinks = response.css("body").re("\"([^\"]*?hqdefault\.jpg)\"")
             galleryLinks = []
             fileNames = []
@@ -314,15 +314,21 @@ class rssImageExtractor(scrapy.Spider):
                 fileNames.append(fileName[i] + " " + t.split("/")[4] + ".jpg")
                 i += 1
                 galleryLinks.append("https://www.youtube.com/watch?v=%s" % (t.split("/")[4]))
-            self.downloadTHumbsGeneric(response, galleryLinks, thumbLinks, fileNames)
+            try:
+                self.downloadTHumbsGeneric(response, galleryLinks, thumbLinks, fileNames)
+            except Exception as e:
+                with open("logThumbnail.txt", "a+") as inF:
+                    inF.write(str(e) + "\n")
+
             self.downloadCompleteRegister(channelId, nextPageToken)
         urlPart = "&pageToken=" + nextPageToken
         if "&pageToken=" not in response.url:
             googleApiUrl = response.url + urlPart
         else:
             googleApiUrl = re.sub("\&pageToken=.*$", urlPart, response.url)
-            print("Keep it uptube" + googleApiUrl)
-        yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
+            print("Keep it uptube " + googleApiUrl)
+        if self.alreadyNotDownloaded(channelId, "@@"):
+            yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
 
     def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
         websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
@@ -334,6 +340,7 @@ class rssImageExtractor(scrapy.Spider):
                 galCode = galleryCode[i]
             imgLink = imgLinks[i]
             fileName = fileNames[i]
+            # print(fileName)
             if self.alreadyNotDownloaded(websiteName, galCode):
                 # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
                 formedUrl = links

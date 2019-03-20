@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/thumbnailsDownloader.py" line="523" />
+    <bookmark url="file://$PROJECT_DIR$/thumbnailsDownloader.py" line="530" />
     <bookmark url="file://$PROJECT_DIR$/galleryCrawler.py" line="204" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96bc449c-d4bd-4bbb-8195-c887a1d23a22" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babesource - Copy.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource - Copy.opml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/babesource.opml" beforeDir="false" afterPath="$PROJECT_DIR$/babesource.opml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/Gallery/UUpN-WGQgGsOrXm7nHXDdTDAYoutube.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/UUpN-WGQgGsOrXm7nHXDdTDAYoutube.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.foxhq.comIndexGallery.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/Gallery/www.googleapis.comGallery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/Gallery/www.googleapis.comGallery.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/img00deviantartnet.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/pre00deviantartnet.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/media1santabantacom.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/filewise/wwwporncomixinfo.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/list/porncomix.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/porncomix.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/list/videos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/list/videos.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/thumbnailsDownloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/thumbnailsDownloader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,91 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="galleryCrawler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11016">
-              <caret line="648" column="62" selection-start-line="648" selection-start-column="62" selection-end-line="648" selection-end-column="62" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="alreadyDone.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../python/alreadyDone.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="8" column="16" selection-start-line="6" selection-start-column="4" selection-end-line="8" selection-end-column="16" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="duplicateLineRem.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../python/duplicateLineRem.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sinSpider.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../sinisterGramV2/sinSpider.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="56" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="notSoRand.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../python/notSoRand.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Harlotation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ImgSelector/Harlotation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="extractMatchingLines.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../python/extractMatchingLines.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="22" column="54" selection-start-line="16" selection-end-line="22" selection-end-column="54" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="thumbnailsDownloader.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="277" column="47" selection-start-line="277" selection-start-column="47" selection-end-line="277" selection-end-column="47" />
+            <state relative-caret-position="192">
+              <caret line="314" column="22" lean-forward="true" selection-start-line="314" selection-start-column="22" selection-end-line="314" selection-end-column="22" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -128,8 +49,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>proper</find>
-      <find>ddf2</find>
       <find>evil</find>
       <find>links</find>
       <find>car</find>
@@ -158,6 +77,8 @@
       <find>conte</find>
       <find>trace</find>
       <find>youtu</find>
+      <find>check</find>
+      <find>excep</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,6 +107,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -197,7 +119,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -487,7 +408,14 @@
       <option name="project" value="LOCAL" />
       <updated>1552839288259</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="youtube chANNel url support">
+      <created>1553067669299</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1553067669299</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -498,7 +426,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32913387" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32913387" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3288889" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3288889" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.3288889" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -1035,8 +963,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/galleryCrawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11016">
-          <caret line="648" column="62" selection-start-line="648" selection-start-column="62" selection-end-line="648" selection-end-column="62" />
+        <state relative-caret-position="321">
+          <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -1045,8 +973,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/thumbnailsDownloader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="277" column="47" selection-start-line="277" selection-start-column="47" selection-end-line="277" selection-end-column="47" />
+        <state relative-caret-position="192">
+          <caret line="314" column="22" lean-forward="true" selection-start-line="314" selection-start-column="22" selection-end-line="314" selection-end-column="22" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
