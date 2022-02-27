@@ -7,17 +7,21 @@ import os
 import pickle
 import sys
 import unicodedata
+import pathlib
+import time
 
 class rssImageExtractor(scrapy.Spider):
     name = "quotes"
 
     def start_requests(self):
+        self.debugMode = False
         try:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             if (len(sys.argv) > 1):
                 t = open(sys.argv[1], "r+")
             else:
                 t = open(dir_path + "\\babesource.opml", "r+")
+                # t = open(dir_path + "\\Test.opml", "r+")
             urls = t.readlines()
             t.close()
             # print("hello")
@@ -34,7 +38,7 @@ class rssImageExtractor(scrapy.Spider):
                     spider['url'] = url
                     spider['download_maxsize'] = 1024 * 1024 * 3
                     yield scrapy.Request(url=url[:-1], callback=self.pubaThumbs, meta=spider)
-                if "porncomix.info" in url:
+                if "porncomix.info" in url or "bestporncomix.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.porncomix)
                 if "r34anim" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.r34anime)
@@ -70,6 +74,8 @@ class rssImageExtractor(scrapy.Spider):
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
                 if "jenniferjade" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.babeShow)
+                if "allporncomic.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.allcomics)
                 if "naughtyamerica.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.naughtyamerica)
                 if "lyndaleigh.com" in url:
@@ -86,9 +92,20 @@ class rssImageExtractor(scrapy.Spider):
                         'galCodeFromImgExtractorRe': "content/DL02/(.*?)/"}
                     yield scrapy.Request(url=url[:-1], callback=self.findingGalCodeFromImage, meta=metaData)
                 if "devilsfilm.com" in url:
-                    yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
+                    yield scrapy.Request(url=url.strip(), callback=self.DevilsFilm)
                 if "blowpass.com" in url:
                     yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
+                if "r18.com" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.r18)
+                if "vipergirls.to" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.vipergirls)
+                if "pics.vc" in url:
+                    yield scrapy.Request(url=url[:-1], callback=self.picvc)
+                # import pdb; pdb.set_trace()
+                if "skymovieshd" in url:
+                    url = url.replace("skymovieshd.life","skymovieshd.me")
+                    yield scrapy.Request(url=url.strip(), callback=self.skymovieshd)
+            
         except Exception as e:
             with open("logThumbnail.txt", "a+") as inF:
                 inF.write(str(e) + "\n")
@@ -96,6 +113,105 @@ class rssImageExtractor(scrapy.Spider):
     def alreadyNotDownloaded(self, fileName, Id):
         return galleryCrawler.rssImageExtractor().alreadyNotDownloaded("Gallery\\" + fileName, Id)
 
+    def skymovieshd(self, response):
+        print("r18 stated")
+        # import pdb; pdb.set_trace()
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if "/category/" in response.url:
+            urls = response.css("a[href*=movie]::attr(href)").extract()
+            urls = [urllib.request.urljoin(response.url, x) for x in urls]
+            for url in urls:
+                yield scrapy.Request(url=url.strip(), callback=self.skymovieshd,priority=1)
+
+        else:
+            # import pdb; pdb.set_trace()
+            imgLinks = response.css("center > img::attr(src)").extract()
+            galleryLinks = [response.url] * len(imgLinks)
+            filename =  response.css("title::text").extract()[0]
+            
+            fileNames = [filename + str(i) +" .jpg" for i,_ in enumerate(imgLinks) ]
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+
+    def vipergirls(self, response):
+        # self.debugMode = True
+        print("r18 stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery12"
+        if True:
+            # galleryLinks = response.css("a[onmouseover*=\.jpg]::attr(href)").extract()
+            galleryLinks = response.css("a.title[href*=thread]::attr(href)").extract()[1:]
+            galleryLinks = [urllib.request.urljoin("https://vipergirls.to/", x) for x in galleryLinks]
+            galcode = [x.split('?')[0] for x in galleryLinks]
+            # import pdb;pdb.set_trace()
+            myreg = r'src="([^"]*)"'
+            thumbsImgLinks = [x.re(myreg) for x in response.css("a[href*=threads\/]::attr(onmouseover)")]
+            imgLinks = [x[2] for x in thumbsImgLinks]
+            imgLinks = [x.replace("/t/","/i/") for x in imgLinks]
+            fileNames = [x.split("/")[-1].replace("?s=","").replace("*","")+".jpg" for x in galleryLinks]
+            print("length of galleryLinks is %s" % len(galleryLinks))
+            print("length of imgLinks is %s" % len(imgLinks))
+            print("length of fileNames is %s" % len(fileNames))
+            print("length of fileNames is %s" % len(galcode))
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames, galcode)
+            self.downloadCompleteRegister(websiteName, response.url)
+            self.debugMode = False
+
+    def picvc(self, response):
+        # import pdb;pdb.set_trace()
+        # self.debugMode = True
+        print("picvc")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = response.css("a[href*=watch\?g\=]::attr(href)").extract()
+            galleryLinks = [urllib.request.urljoin(response.url, x) for x in galleryLinks]
+        
+            imgLinks =  response.css("a.tdn > div > meta[itemprop*=contentURL]::attr(content)").extract()
+
+            rawName = ["".join(x.css("::text").extract()).replace("\n","").replace("#","").strip() for x in response.css(".gall_name") ]
+            codes = [x.split("=")[-1] for x in galleryLinks]
+            fileNames =[x+y+".jpg" for x,y in zip(rawName,codes)]
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def r18(self, response):
+        print("r18 stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = response.css("a[href*=i3_ord]::attr(href)").extract()
+            imgLinks = response.css("a[href*=i3_ord]").css("img::attr(data-original)").extract()
+            imgLinks = [x.replace("ps.jpg","pl.jpg") for x in imgLinks]
+            fileNames = [ x +".jpg" for x in response.css("a[href*=i3_ord]").css("img::attr(alt)").extract()]
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def allcomics(self, response):
+        print("allcomics")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = response.css("div.item-thumb>a::attr(href)").extract()
+            # galleryLinks = [urllib.request.urljoin(response.url, x) for x in galleryLinks]
+        
+            imgLinks =  response.css("div.item-thumb>a>img::attr(src)").extract()
+
+            # rawName = ["".join(x.css("::text").extract()).replace("\n","").replace("#","").strip() for x in response.css(".gall_name") ]
+            # codes = [x.split("=")[-1] for x in galleryLinks]
+            fileNames =[x.rstrip('\/').split('/')[-1] for x in galleryLinks]
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+    def r18(self, response):
+        print("r18 stated")
+        websiteName = self.properName(response.url.split("/")[2]) + "IndexGallery"
+        if True:
+            galleryLinks = response.css("a[href*=i3_ord]::attr(href)").extract()
+            imgLinks = response.css("a[href*=i3_ord]").css("img::attr(data-original)").extract()
+            imgLinks = [x.replace("ps.jpg","pl.jpg") for x in imgLinks]
+            fileNames = [ x +".jpg" for x in response.css("a[href*=i3_ord]").css("img::attr(alt)").extract()]
+            self.downloadTHumbsGeneric(response, galleryLinks, imgLinks, fileNames)
+            self.downloadCompleteRegister(websiteName, response.url)
+
+ 
     def pubaThumbs(self, response):
         if ".mp4" in response.url:
             return
@@ -222,6 +338,7 @@ class rssImageExtractor(scrapy.Spider):
     def scoreLand(self, response):
         print("comicvine stated")
         websiteName = self.properName(response.url.split("/")[2])
+        return
         if True:
             galleryLinks = [urllib.request.urljoin(response.url, x) for x in
                             response.css("a").re("href=\"(.*?/\d\d\d\d\d/.*)?\"")]
@@ -261,7 +378,7 @@ class rssImageExtractor(scrapy.Spider):
             galCode = []
             for i in range(len(galCodes1)):
                 galCode.append(galleryLinks[i] + galCodes1[i])
-            imgLinks = response.css(".post>a>img::attr(data-lazy-src)").extract()
+            imgLinks = response.css(".post>a>img::attr(src)").extract()
             fileNames = []
             for imgL in imgLinks:
                 fileNames.append(imgL.split("/")[-1])
@@ -331,6 +448,13 @@ class rssImageExtractor(scrapy.Spider):
             yield scrapy.Request(callback=self.startYoutubeThumbnails, priority=2, url=googleApiUrl)
 
     def downloadTHumbsGeneric(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
+        from pyIDM import download
+        if len(galleryLinks) != len(imgLinks) or len(galleryLinks) != len(fileNames):
+            print("length of galleryLinks is %s" % len(galleryLinks))
+            print("length of imgLinks is %s" % len(imgLinks))
+            print("length of fileNames is %s" % len(fileNames))
+            import pdb;pdb.set_trace()
+        fileNames = [self.properName(x) for x in fileNames]
         websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
         for i in range(len(galleryLinks)):
             links = galleryLinks[i].lstrip("/")
@@ -341,7 +465,7 @@ class rssImageExtractor(scrapy.Spider):
             imgLink = imgLinks[i]
             fileName = fileNames[i]
             # print(fileName)
-            if self.alreadyNotDownloaded(websiteName, galCode):
+            if self.alreadyNotDownloaded(websiteName, galCode) or self.debugMode:
                 # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
                 formedUrl = links
                 if not re.search("http", formedUrl):
@@ -351,11 +475,19 @@ class rssImageExtractor(scrapy.Spider):
                 print(formedUrl)
                 os.system("md NewBabes\\%s" % websiteName)
                 print("NewBabes\\%s\\%s and img link %s" % (websiteName, fileName, imgLink))
-                urllib.request.urlretrieve(imgLink, "NewBabes\\%s\\%s" % (websiteName, fileName))
+                
+                # try:
+                    # urllib.request.urlretrieve(imgLink, "NewBabes\\%s\\%s" % (websiteName, fileName))
+                # except:
+                    # import pdb;pdb.set_trace()
+                dirPath = pathlib.Path.cwd() / "NewBabes" / websiteName
+                print(dirPath)
+                download(dirPath,fileName,imgLink,self.debugMode)
                 self.setFileMeta(fileName, formedUrl, websiteName)
                 # self.downloadThisGallery(formedUrl)
                 self.downloadCompleteRegister(websiteName, galCode)
             print(links)
+        self.debugMode = False
 
     def downloadTHumbsGeneric2(self, response, galleryLinks, imgLinks, fileNames, galleryCode=[]):
         websiteName = self.properName(response.url.split("/")[2]) + "Gallery"
@@ -445,11 +577,13 @@ class rssImageExtractor(scrapy.Spider):
             self.downloadCompleteRegister("indianMasala.txt", re.search('hqgallery=(.*)', response.url)[1])
 
     def downloadThumbnails(self, response):
-        imgUrls = response.css("img").re("src=\"([^\"]*.jpg)\"")
+        imgUrls = response.css("div .content").css('img::attr(src)').extract()
+        # imgUrls = response.css("img").re("src=\"([^\"]*.jpg)\"")
         print("Downloading Pictures from URL:%s" % response.url)
         # galleryLinks = response.css("a[href*=galleries]::attr(href)").extract()
         galleryLinks = response.css("a").re("href=\"https?://babesource.com/galleries/([^\"]*).html\"")
         i = 0
+        # import pdb;pdb.set_trace()
         for imgUrl in imgUrls:
             imgFileName = galleryLinks[i] + ".jpg"
             i += 1
@@ -460,7 +594,9 @@ class rssImageExtractor(scrapy.Spider):
                     absLink = "https://babesource.com/galleries/%s.html" % (galleryLinks[i - 1])
                     self.downloadThisGallery(absLink)
                 else:
-                    urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
+                    x = galleryCrawler.rssImageExtractor()
+                    x.downloadImg(imgUrl, "NewBabes\\%s" % imgFileName)
+                    # urllib.request.urlretrieve(imgUrl, "NewBabes\\%s" % imgFileName)
                 self.downloadCompleteRegister("babesourceGallery", galleryLinks[i - 1])
 
     def downloadThisGallery(self, link):
@@ -680,15 +816,20 @@ class rssImageExtractor(scrapy.Spider):
 
     def setFileMeta(self, fileName, Meta, websiteName):
         fileMeta = {}
+        
         try:
             with open("NewBabes\\%s\\FileUrl.pkl" % websiteName, "rb+") as inFile:
                 fileMeta = pickle.load(inFile)
         except Exception as e:
-            with open("NewBabes\\%s\\FileUrl.pkl" % websiteName, "wb") as inFile:
-                pass
             print(e.__str__())
+            import pdb;pdb.set_trace()
+            with open("NewBabes\\%s\\FileUrl.pkl" % websiteName, "wb") as inFile:
+                
+                pass
+        # import pdb;pdb.set_trace()
         fileMeta[fileName] = Meta
         pickle.dump(fileMeta, open("NewBabes\\%s\\FileUrl.pkl" % websiteName, "wb"))
+        time.sleep(1)
 
     def getFileMeta(self, fileName):
         with open("NewBabes\\www.foxhq.comGallery\\FileUrl.pkl", "rb") as inFile:

@@ -1,0 +1,3 @@
+'rssImageExtractor' object has no attribute 'skyMovies'
+'rssImageExtractor' object has no attribute 'skyMovies'
+'rssImageExtractor' object has no attribute 'skyMovies'

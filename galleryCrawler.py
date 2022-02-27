@@ -1,10 +1,12 @@
 import scrapy
 import urllib.request
+import urllib.parse
 import re
 import requests
 import shutil
 import time
 import random
+import pathlib
 import sys
 import os
 from scrapy.spidermiddlewares.httperror import HttpError
@@ -17,7 +19,7 @@ class rssImageExtractor(scrapy.Spider):
 
     custom_settings = {
         'USER_AGENT': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
-    }
+        }
 
     def start_requests(self):
         try:
@@ -33,8 +35,24 @@ class rssImageExtractor(scrapy.Spider):
         urls = t.readlines()
         t.close()
         random.shuffle(urls)
+        # import pdb;pdb.set_trace()
+        urls = [x for x in urls if x != "\n"]
+        self.removeLine("\n\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
         # self.urlDownload("http://t.umblr.com/redirect?z=https%3A%2F%2Fs1.webmshare.com%2FxO4Gb.webm&t=ZTY2ZDA1MjVjZTViMzgzOWNkYmY3MWU4OWM3MWFhMzhjMDAzMzQ2NCxnYVJmc2tUSg%3D%3D&b=t%3Ar19b_e4ZaWchfT4jGaBDFA&p=https%3A%2F%2Fbruh-sfm.tumblr.com%2Fpost%2F163066829714%2Flara-croft-rise-of-the-tomb-raider-webmwebm&m=1","newTest.mp4")
         for url in urls:
+            print(url)
+            url = url.strip()
+            sqaureP = re.search("@\[(.*)\]", url)
+            if sqaureP != None:
+                # lb, ub = [int(x) for x in sqaureP[1].split(",")]
+                lb, ub = [int(x) for x in re.split("[-,]",sqaureP[1])]
+                NewUrls = [url.replace(sqaureP[0],str(ui)) for ui in range(lb,ub)]
+                [urls.append(NewUrl) for NewUrl in NewUrls]
+                # urls.append(NewUrls)
+                continue
+            if len(url.split("ttp")) > 2:
+                gp = ["http"+x for x in re.split("h?ttp",url)[1:]]
+                urls.extend(gp)
             if "evilangel.com" in url:
                 yield scrapy.Request(url=url[:-1].replace("picture", "photogallery") + "/2", callback=self.EvilAngel)
             if "bskow.com" in url:
@@ -69,6 +87,8 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.comicVine, errback=self.on404)
             elif "devilsfilm.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.DevilsFilm)
+            elif "adultdvdempire.com" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.adultdvdempire)
             elif "galleries.spizoo.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.thumbToLarge,
                                      meta={"search": "thumbs\/thumbnail-0?", "replace": "hires/SP", "index": -2,
@@ -79,6 +99,8 @@ class rssImageExtractor(scrapy.Spider):
                                      meta={"search": "\/tn\/", "replace": "/full/", "index": -2,
                                            "galleryCodeFromURL": code})
             elif "scoreland2.com" in url:
+                if "http://www.scoreland2.comh" in url:
+                    url = url.replace("http://www.scoreland2.comh","h")
                 yield scrapy.Request(url=url[:-1], callback=self.ScoreLand)
             elif "alluringvixens.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.alluringvixens)
@@ -94,11 +116,11 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.porngals4)
             elif "actiongirls.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.ActionGirl)
-            elif "porncomix.info" in url:
+            elif "porncomix.info" in url or "bestporncomix.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.downloadPorncomix)
             elif "lucyzara.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.BoundCash)
-            elif "santabanta.com" in url:
+            elif "santabanta.com" in url and "wallpapers" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.santabanta)
             elif "aziani.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.aziani)
@@ -107,19 +129,34 @@ class rssImageExtractor(scrapy.Spider):
             elif "r34anim.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.r34anime)
             elif "babesource.com" in url:
-                yield scrapy.Request(url=url[:-1], callback=self.downloadThisBabesGallery)
+                yield scrapy.Request(url=url.strip(), callback=self.downloadThisBabesGallery)
             elif "penthouse.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.pentHouse)
             elif "lyndaleigh.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.babeShow)
+            elif "planetsuzy.org" in url:
+                yield scrapy.Request(url=url[:-1], callback=self.planetSuzy)
             elif "jenniferjade.xxx" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.babeShow)
             elif "deviantart.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.deviantArt)
             elif "lyndaleigh.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.babeShow)
+            elif "viper" in url:
+                continue
             elif "instagram.com" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.instagramVideo)
+            elif "imagefap.com" in url and "photo" in url:
+                cookie = "PHPSESSID=becef4fcc277bc00d354381614a223a1; phpbb3_oon83_u=1; phpbb3_oon83_k=; phpbb3_oon83_sid=7435431b0d5686422ee0957ea457185d; style_cookie=null; loc=US; show_only_once_per_day6=1"
+                c = self.getScrapyCookie(cookie)
+                yield scrapy.Request(url=url.strip(), callback=self.imageFap,cookies=c)
+            elif "skymovieshd" in url:
+                # import pdb;pdb.set_trace()
+                c = self.getScrapyCookie("__cfduid=d2c48574a44a0ffa86d974c9d5d17a4cc1599149187")
+                url = url.replace("skymovieshd.life","skymovieshd.ink")
+                yield scrapy.Request(url=url.strip(), callback=self.skymovieshd,cookies=c)
+            elif "imagefap.com" in url and "pictures" in url:
+                yield scrapy.Request(url=url.strip(), callback=self.imageFapSet)
             elif "japanesebeauties.net" in url:
                 yield scrapy.Request(url=url[:-1], callback=self.japanesebeauties)
             elif "dogfartnetwork.com" in url:
@@ -129,7 +166,88 @@ class rssImageExtractor(scrapy.Spider):
                 yield scrapy.Request(url=url[:-1], callback=self.expander, meta=spiderMeta)
             else:
                 print("else " + url)
-                yield scrapy.Request(url=url[:-1], callback=self.imgLinks)
+                # yield scrapy.Request(url=url[:-1], callback=self.imgLinks)
+
+                
+    def getScrapyCookie(self,cookie):
+        # cookie = "PHPSESSID=becef4fcc277bc00d354381614a223a1; phpbb3_oon83_u=1; phpbb3_oon83_k=; phpbb3_oon83_sid=7435431b0d5686422ee0957ea457185d; style_cookie=null; loc=US; show_only_once_per_day6=1"
+        cookie = cookie.strip()
+        cookie = cookie.strip(";")
+        t = cookie.split(";")
+        k = {x.split("=")[0].strip():x.split("=")[1].strip() for x in t}
+        print(k)
+        return k
+                
+    def skymovieshd(self, response):
+        print("skymovieshd")
+        # import pdb;pdb.set_trace()
+        links = response.css("a[href*=howb]::attr(href)").extract()
+        for url in links:
+            yield scrapy.Request(url=url.strip(), callback=self.howblogs)
+        
+    def howblogs(self, response):
+        prioritySites = ["zippyshare" ,"megaup.net", "clicknupload" , "letsupload"]
+        links = response.css("a::attr(href)").extract()
+        if self.alreadyNotDownloaded("howblogs", response.url):
+            for p in prioritySites:
+                d = [x for x in links if p in x]
+                if d != []:
+                    print("Done")
+                    self.downloadCompleteRegister("SharedHosted", d[0])
+                    break
+            self.downloadCompleteRegister("howblogs", response.url)
+        else:
+            x = response.request.headers.get('Referer', None)
+            x = x.decode("utf-8")
+            refUrl = urllib.parse.unquote(x)
+            self.removeLine(refUrl + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
+            # import pdb;pdb.set_trace()
+        
+    def imageFapSet(self, response):
+        print("Fappin on Pictures started")
+        cookie = "PHPSESSID=becef4fcc277bc00d354381614a223a1; phpbb3_oon83_u=1; phpbb3_oon83_k=; phpbb3_oon83_sid=7435431b0d5686422ee0957ea457185d; style_cookie=null; loc=US; show_only_once_per_day6=1"
+        c = self.getScrapyCookie(cookie)
+        t = response.css("a[href*=photo]::attr(href)").extract()
+        SingleImageHref = [urllib.request.urljoin(response.url, x) for x in t]
+        if self.alreadyNotDownloaded("imageFap", response.url):
+            for sih in SingleImageHref:
+                yield scrapy.Request(url=sih, callback=self.imageFap,cookies=c)
+            self.downloadCompleteRegister("imageFap", response.url)
+        t = response.css("a[class=link3]::text").extract()
+        f = -1
+        for i,k in enumerate(t):
+                if "next" in k:
+                    f = i
+        if f == -1:
+            return
+        url = response.css("a[class=link3]::attr(href)").extract()[f]
+        url = urllib.request.urljoin(response.url, url)
+        yield scrapy.Request(url=url.strip(), callback=self.imageFapSet,cookies=c)
+
+                
+    def imageFap(self, response):
+        print("Fappin on image started")
+        imageSrc = [x.replace("https","http") for x in response.css("img[src*=full]::attr(src)").extract()]
+        if response.css("font[itemprop*=name]::text").extract() != []:
+            galCode = response.css("font[itemprop*=name]::text").extract()[0]
+        else:
+            galCode = response.css("title::text").extract()[0]
+        url = response.url
+        if "#" in url:
+            index = url.split("#")[-1]
+        else:
+            index = url.split("&idx=")[-1].split("&")[0]
+        if ".gif" in imageSrc[0]:
+            galCode = galCode + str(index)+".gif"
+            self.downloadGalleryGeneric(response, imageSrc[:1], [galCode],"",False, "GIFS\\%s" % response.css("font[itemprop*=name]::text").extract()[0])
+        else:
+            galCode = galCode + str(index)+".jpg"
+            cookie = "PHPSESSID=becef4fcc277bc00d354381614a223a1; phpbb3_oon83_u=1; phpbb3_oon83_k=; phpbb3_oon83_sid=7435431b0d5686422ee0957ea457185d; style_cookie=null; loc=US; show_only_once_per_day6=1"
+            c = self.getScrapyCookie(cookie)
+            # self.downloadGalleryGeneric(response, imageSrc[:1], [galCode],"",False, "imageSet\\%s" % response.css("font[itemprop*=name]::text").extract()[0])
+            print(imageSrc[:1])
+            self.downloadGalleryGeneric(response, imageSrc[:1], [galCode],"",True,"imageSet\\%s" % response.css("font[itemprop*=name]::text").extract()[0],cookies=c)
+        
 
     def r34anime(self, response):
         videoUrl = response.css("source::attr(src)").extract()[0]
@@ -193,6 +311,39 @@ class rssImageExtractor(scrapy.Spider):
         print(fhgUrl)
         yield scrapy.Request(url=fhgUrl, callback=self.naughtyAmericaFHG, priority=1)
 
+
+    def adultdvdempire(self, response):
+        print("adultdvdempire")
+        imgUrls = response.css("a[href*=jpg][href*=galleries]::attr(href)").extract()
+        if imgUrls == []:
+            return
+        h = response.css("a[href*=pornstars][href*=galleries]::attr(href)").extract()
+        names = [x.split("/")[-1].replace("-pornstars.html", "") for x in h]
+        pageNo = "0"
+        if "page=" in response.url:
+            pageNo = response.url.split("page=")[-1]
+
+        galCode = " and ".join(names) + " " + response.url.split("/")[3] + "P" + pageNo
+        fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
+        nextUrl = response.url.split("?")[0] + "?page=" +str(int(pageNo) + 1)
+        yield scrapy.Request(url=nextUrl, callback=self.adultdvdempire)
+
+    def planetSuzy(self, response):
+        print("Planet suzy penetration started")
+        imgtwistLinks = response.css("a[href*=imagetwist]::attr(href)").extract()
+        url = response.url
+        galCode = url.split("/")[-1].split(".")[0]
+        for link in imgtwistLinks:
+            yield scrapy.Request(url=link, callback=self.imageTwist , meta = {"galCode":galCode})
+    
+    def imageTwist(self, response):
+        fileNameExtension = response.meta["galCode"]
+        print("ImageTwist started")
+        imgUrls = response.css(".pic.img.img-responsive::attr(src)").extract()
+        fileNames = [fileNameExtension+" " + x.split("/")[-1] for x in imgUrls]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames)
+
     def naughtyAmericaFHG(self, response):
         print("getting to FHG")
         imgUrls = response.css("a[href*=jpg]::attr(href)").extract()
@@ -201,20 +352,54 @@ class rssImageExtractor(scrapy.Spider):
         fileNames = [galCode + " " + str(x) + ".jpg" for x in range(len(imgUrls))]
         self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode)
 
-    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode="", static=True):
+    def downloadGalleryGeneric(self, response, imgUrls, fileNames, galCode="", static=True, folderName= "BabesImgs",cookies=""):
         websiteName = self.properName(response.url.split("/")[2])
+        print(response.url)
+        if len(fileNames) == 0:
+            with open("NofilesFound.txt", "a+") as inF:
+                inF.write(response.url + "\n")
+            return 
+        checkEachLinkIndividually = False if galCode != "@" else True
         if galCode == "":
             galCode = response.url
-        if self.alreadyNotDownloaded(websiteName, galCode):
+        # import pdb; pdb.set_trace()
+        refUrl = response.request.headers.get('Referer', None) if response.request.headers.get('Referer', None) != None else response.url
+        # import pdb; pdb.set_trace()
+        refUrl = refUrl.decode("utf-8") if type(refUrl) == bytes else refUrl
+        # import pdb; pdb.set_trace()
+        count = 1
+        if self.alreadyNotDownloaded(websiteName, galCode) or checkEachLinkIndividually:
             for i in range(len(imgUrls)):
+                # import pdb; pdb.set_trace()
+                print(len(imgUrls))
+                if random.randint(1, 3) == 2:
+                    print("cleaning buffer")
+                    time.sleep(1)
                 formedUrl = imgUrls[i]
                 if "http" not in imgUrls[i]:
                     formedUrl = urllib.request.urljoin(response.url, imgUrls[i])
+                    print(formedUrl)
                 if static:
-                    self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % fileNames[i])
+                    # print(i)
+                    try:
+                        count += 1
+                        self.downloadImgWithIDM(response,formedUrl, "%s\\%s" % (folderName, fileNames[i]))
+                    except Exception as e:
+                        print(e)
+                        if "No such file or directory" not in str(e):
+                            
+                            import pdb; pdb.set_trace()
                 else:
-                    self.downloadImg(formedUrl, "BabesImgs\\%s" % fileNames[i])
+                    print("File")
+                    print(formedUrl)
+                    self.downloadImg(formedUrl, "%s\\%s" % (folderName, fileNames[i]))
             self.downloadCompleteRegister(websiteName, galCode)
+            if count != len(imgUrls)+1 and static:
+                import pdb; pdb.set_trace()
+        else:
+            
+            self.removeLine(refUrl + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
+                
 
     def SingleImage(self, response):
         print("Entering a page to download a single image")
@@ -245,6 +430,30 @@ class rssImageExtractor(scrapy.Spider):
         print("Downloadin from instagram videos")
         name = response.css("meta[property*=title]::attr(content)").extract()[0]
         print("name = " + name)
+        if re.search("^(.*?) on", name) is not None:
+            response.meta['extractedName'] = re.search("^(.*?) on", name)[1]
+        else:
+            response.meta['extractedName'] = name[:100]
+            # import pdb; pdb.set_trace()
+        response.meta['imgId'] = response.url.split("/")[4]
+        if len(response.css("head").re("<meta property=\"og:video\" content=\"(.*?)\"")) > 0:
+            videoURL = response.css("head").re("<meta property=\"og:video\" content=\"(.*?)\"")[0] 
+            videoURL = videoURL.replace("&amp;","&")
+            print(videoURL)
+        else:
+            videoURL = response.css("body").re('"video_url":"(.*?)\"')[0] 
+            videoURL = videoURL.replace("\\u0026","&")
+            # import pdb; pdb.set_trace()
+        # num = input('How long to wait: ')
+        videoPath = r"D:\paradise\stuff\SinToWatch"
+        filename = response.meta['extractedName'] + " " + response.meta['imgId'] + ".mp4"
+        self.downloadThisVideo(response, videoPath, filename, videoURL)
+        print(videoURL)
+
+    def DeepFakes(self, response):
+        print("Downloadin from instagram videos")
+        name = response.css("meta[property*=title]::attr(content)").extract()[0]
+        print("name = " + name)
         response.meta['extractedName'] = re.search("^(.*?) on", name)[1]
         response.meta['imgId'] = response.url.split("/")[4]
         videoURL = response.css("head").re("<meta property=\"og:video\" content=\"(.*?)\"")[0]
@@ -255,16 +464,29 @@ class rssImageExtractor(scrapy.Spider):
 
     def downloadThisVideo(self, response, videoPath, filename, videoUrl):
         filename = self.properName(filename)
-        if self.alreadyNotDownloaded("videos", filename):
+        userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"
+        print("videos"+filename[:3])
+        if self.alreadyNotDownloaded("videos"+filename[:3], filename+videoPath):
             cmd = r"C:\Program Files (x86)\Internet Download Manager\IDMan.exe"
-            wholeCommand = 'start "" "%s" /d %s /p "%s" /f \"%s\" /n /a' % (cmd, videoUrl, videoPath, filename)
+            wholeCommand = 'start "" "%s" /d "%s" /p "%s" /f \"%s\" /n /a "%s"' % (cmd, videoUrl, videoPath, filename,userAgent)
             print(wholeCommand)
             os.system(wholeCommand)
-            self.downloadCompleteRegister("videos", filename)
-
-    def downloadImgWithIDM(self, imgUrl, Path):
+            self.downloadCompleteRegister("videos"+filename[:3], filename+videoPath)
+        else:
+            pass
+            # self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
+            
+            
+    def downloadImgWithIDM(self, response, imgUrl, Path):
         filename = Path.split("\\")[-1]
-        self.downloadThisVideo(10, r"C:\GalImgs\BabesImgs", filename, imgUrl)
+        folder = "\\".join(Path.split("\\")[:-1])
+        # print("DDDD"+folder)
+        # time.sleep(10)
+        folder = re.sub("[^\w\\\ \d-]","", folder)
+        folder = re.sub("\s+"," ", folder)
+        # print("YYYY"+folder)
+        print(r"C:\GalImgs\%s" % folder)
+        self.downloadThisVideo(response, r"C:\GalImgs\%s" % folder, filename, imgUrl)
 
     def extractFromBodyRe(self, response, codeRe):
         response.css("body").re(codeRe)
@@ -404,6 +626,9 @@ class rssImageExtractor(scrapy.Spider):
             content = f.read()
             f.seek(0, 0)
             content.replace(line, "")
+            if content == "":
+                print("cntent clear")
+                import pdb;pdb.set_trace()
             f.write(content)
 
     def defaultTemplate(self, response):
@@ -480,8 +705,10 @@ class rssImageExtractor(scrapy.Spider):
                 imgFileName = response.css("title").re("<title>(.*?)<")[0] + str(i) + ".jpg"
                 print(imgUrl)
                 # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(response,imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("babeGallery", response.css("title").re("<title>(.*?)<")[0])
+        else:
+            # import pdb;pdb.set_trace()
             self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
     def pentHouse(self, response):
@@ -566,7 +793,7 @@ class rssImageExtractor(scrapy.Spider):
                 # imgUrl = self.relativeToAbsoulute(response, imgUrl)
                 print(imgUrl)
                 # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(response,imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("puba", imgCode)
             # self.downloadCompleteRegister("puba2", "@" + re.search("wmfear\.14\.9\.9\.0\.(.*?)\.0\.0\.0", t)[1] + "@")
 
@@ -583,10 +810,16 @@ class rssImageExtractor(scrapy.Spider):
                 self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("aziani", response.css("title").re("<title>(.*?)<")[0].split("-")[0])
 
+            
+            
     def deviantArt(self, response):
-        parseTheseLink = [response.url] + response.css("div.gr a::attr(href)").extract()
-        for links in parseTheseLink:
-            yield scrapy.Request(links, callback=self.deviantArtConvertToRSS, priority=1)
+        if "www.deviantart.com" in response.url:
+            userName = response.url.split("/")[3]
+        else:
+            userName = response.url.split("/")[2].split(".")[0]
+        templateUrl = "https://backend.deviantart.com/rss.xml?q=gallery%3A@@"
+        madepUrl = templateUrl.replace("@@" , userName)    
+        yield scrapy.Request(madepUrl, callback=self.downloadDeviantImages, priority=1)
 
     def deviantArtConvertToRSS(self, response):
         parseTheseLink = response.css("link[type*=application]::attr(href)").extract()
@@ -596,9 +829,9 @@ class rssImageExtractor(scrapy.Spider):
     def downloadDeviantImages(self, response):
         imageUrls = response.css("media\:content::attr(url)").extract()
         for imgUrls in imageUrls:
-            imgFileName = imgUrls.split("/")[-1]
+            imgFileName = imgUrls.split("/")[-1].split(".jpg?")[0]
             self.ensure_dir("Art\\")
-            if not self.downloadImg(imgUrls, "Art\\%s" % imgFileName):
+            if not self.downloadImg(imgUrls, "Art\\%s.jpg" % imgFileName):
                 # pass
                 break
 
@@ -615,7 +848,7 @@ class rssImageExtractor(scrapy.Spider):
                     formedUrl = "http:" + formedUrl
                 print(formedUrl)
                 # self.downloadImg(formedUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadImgWithIDM(formedUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(response,formedUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("ScoreLand", response.css("title").re("<title>(.*?)<")[0])
             self.removeLine(response.url + "\n", r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
@@ -641,7 +874,7 @@ class rssImageExtractor(scrapy.Spider):
                 imgFileName = self.properName(response.css("title").re("<title>(.*?)<")[0] + str(i) + ".jpg")
                 print(imgUrl)
                 # self.downloadImg("https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadImgWithIDM("https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(response,"https:" + imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("ddf", response.css("title").re("<title>(.*?)<")[0])
 
     def photodromm(self, response):
@@ -702,7 +935,7 @@ class rssImageExtractor(scrapy.Spider):
                 imgFileName = galName + " " + str(i) + ".jpg"
                 print(imgUrl)
                 # self.downloadImg(imgUrl, "BabesImgs\\%s" % imgFileName)
-                self.downloadImgWithIDM(imgUrl, "BabesImgs\\%s" % imgFileName)
+                self.downloadImgWithIDM(response,imgUrl, "BabesImgs\\%s" % imgFileName)
             self.downloadCompleteRegister("Brazzer", galName)
             self.removeLine(response.url, r"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml")
 
@@ -810,11 +1043,21 @@ class rssImageExtractor(scrapy.Spider):
         yield scrapy.Request(url=thirdPartyUrl, callback=self.thirdParty, meta=spiderMeta)
 
     def removeLine(self, needleLine, filename):
+        # return
         print("needle = %s filename = %s" % (needleLine, filename))
         temp = open(filename, "r")
         lines = temp.read()
         temp.close()
-        lines = lines.replace(needleLine, "")
+        # import pdb;pdb.set_trace()
+        # needleLine = needleLine.rstrip("\n")+"\n"
+        lines = lines.replace(needleLine, "\n")
+        lines = lines.replace(needleLine.replace("https","http"), "\n")
+        if "http" not in lines:
+            temp = open("removeLineProoblem.txt", "w")
+            temp.write("needleline was = %s\n" % needleLine)
+            temp.close()
+            return
+            
         temp = open(filename, "w")
         temp.write(lines)
         temp.close()
@@ -842,7 +1085,7 @@ class rssImageExtractor(scrapy.Spider):
                 print(formedUrl)
                 # imgFileName = "pending " + imgFileName
                 # self.downloadImg(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
-                self.downloadImgWithIDM(formedUrl, "%s\\%s" % (downloadDir, imgFileName))
+                self.downloadImgWithIDM(response,formedUrl, "%s\\%s" % (downloadDir, imgFileName))
             self.downloadCompleteRegister(websiteName, galleryCode)
 
     def DevilsFilm(self, response):
@@ -933,13 +1176,13 @@ class rssImageExtractor(scrapy.Spider):
         name = name.replace("amp", "")
         return re.sub('[^A-Za-z0-9_\-\.\\\ ]+', "", name)
 
-    def downloadImg(self, Url, path):
+    def downloadImg(self, Url, path,cookies=""):
         regFile = "filewise\\" + re.sub('[^A-Za-z0-9\-]+', "", Url.split("/")[2])
         path = self.properName(path)
         try:
             if self.alreadyNotDownloaded(regFile, path):
                 time.sleep(5)
-                r = requests.get(Url, stream=True, timeout=5)
+                r = requests.get(Url, stream=True, timeout=5, cookies=cookies)
                 if r.status_code == 200:
                     i = 0
                     self.ensure_dir("incomplete\\" + path)

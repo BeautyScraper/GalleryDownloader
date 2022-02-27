@@ -1,0 +1,5 @@
+*.jpeg *.jpg *.mp4 
+list/
+__pycache__/
+idea/
+condenv/
