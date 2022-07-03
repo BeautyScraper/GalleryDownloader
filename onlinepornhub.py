@@ -7,11 +7,11 @@ from aria2cgeneric import generic_downloader,noteItDown
 import logging
 
 
-#https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
+#https://onlinepornhub.net/watch-online-porn-bella-aurora-mindless-drooling-mesmer-mp4-hd-1280x720/
 
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "hdpornfull.com"
+    website = "onlinepornhub.net"
 
     def start_requests(self):
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
@@ -40,7 +40,7 @@ class SantaEvent(gC.rssImageExtractor):
 
     def parseFnc(self,response):
         print(self.website)
-        # breakpoint()
+        breakpoint()
         strelinks = response.css('a[href*=streamtape]::attr(href)').getall()
         # if '%' in streamtapelink:
         # if 'filename' in 
@@ -88,7 +88,7 @@ class SantaEvent(gC.rssImageExtractor):
         if 'filename' in response.meta:
             filename = response.meta['filename']
         # breakpoint()
-        savepath = r'D:\paradise\stuff\new\hardcore'
+        savepath = r'D:\paradise\stuff\new\onlyleaks'
         generic_downloader(videolink,filename,filename,4,savepath) 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):

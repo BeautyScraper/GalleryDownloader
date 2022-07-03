@@ -1,6 +1,7 @@
 import subprocess
 import os
 from urllib.parse import urlparse
+import shutil
 from pathlib import Path
 
 def alreadyNotDownloaded(fileName, Id):
@@ -48,4 +49,19 @@ def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
 
 def ariaDownload(url,downPath,filename,connections=4):
     # import pdb;pdb.set_trace()
+    temp_path = r'c:\dumpinGGrounds\aria'
+    Path(temp_path).mkdir(exist_ok=True,parents=True)
+    Path(downPath).mkdir(exist_ok=True,parents=True)
     subprocess.call(['aria2c', '--dir', downPath, '-o', filename,'-x', str(connections) , url])
+    # dfile = Path(temp_path) / filename
+    # if dfile.is_file():
+    #    shutil.move(dfile,downPath)
+    # else:
+    #     raise "url not working"
+    #     breakpoint()
+def noteItDown(fppath,content,id,website):
+    if alreadyNotDownloaded(website,id):
+        with open(fppath, 'a+') as fp:
+            fp.write(content+'\n') 
+        downloadCompleteRegister(website,id)
+    return
