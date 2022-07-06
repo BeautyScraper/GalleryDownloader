@@ -2,6 +2,7 @@ from aria2cgeneric import generic_downloader
 from pathlib import Path
 import pandas as pd
 
+
 class thumb_writer:
     def __init__(self,csv_path='') -> None:
         self.csv_path = r'c:\temp\thumbs.csv'
@@ -12,7 +13,6 @@ class thumb_writer:
             self.csv_data = pd.read_csv(self.csv_path)
         else:
             self.csv_data = pd.DataFrame(columns=['filename','associated_url'])
-
 
     def list_thumbnail_gen(self,img_urls,associated_urls,filenames):
         for x in zip(img_urls,associated_urls,filenames):
