@@ -20,7 +20,7 @@ class SantaEvent(gC.rssImageExtractor):
         except:
             # filename2 = "upperbound.opml"
             filename = "galleryLinks.opml"
-            # filename = "StaticLinks.opml"
+            # filename = "StaticLinks.opml"n
             # filename = "Test.opml"
         t = open(filename, "r+")
         urls = t.readlines()
@@ -52,13 +52,13 @@ class SantaEvent(gC.rssImageExtractor):
         # videolink =  html.unescape('https:/'+videolink) + 'token=' +token_string + '&stream=1'
         filename = response.url.strip('/').split('/')[-1] +' '+ self.website +'.mp4'
         # breakpoint()
-        # pgtitle = response.css('meta[name=\"og:title\"]::attr(content)').get()
+        # pgtitle = response.cnss('meta[name=\"og:title\"]::attr(content)').get()
         # if 'mp4' in pgtitle:
         #     filename = pgtitle
         # if 'filename' in response.meta:
         #     filename = response.meta['filename']
         # breakpoint()
-        savepath = r'D:\paradise\stuff\new\onlyleaks'
+        savepath = r'D:\paradise\stuff\new\pvd2'
         generic_downloader(videolink,filename,filename,4,savepath) 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):

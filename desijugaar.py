@@ -8,7 +8,8 @@ import logging
 from pathlib import Path
 
 #https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
-
+#https://desijugar.info/
+#https://desijugar.info/page/2/
 
 class SantaEvent(gC.rssImageExtractor):
     website = "desijugar.info"
@@ -26,6 +27,14 @@ class SantaEvent(gC.rssImageExtractor):
         urls = t.readlines()
         t.close()
         gC.random.shuffle(urls)
+        static_urls = [
+            'https://desijugar.info/',
+            'https://desijugar.info/page/2/',
+            'https://desijugar.info/page/3/',
+            'https://desijugar.info/page/4/',
+            'https://desijugar.info/page/5/',
+            'https://desijugar.info/page/6/',
+        ]
         for url in urls:
             sqaureP = gC.re.search("@\[(.*)\]", url)
             if sqaureP != None:
@@ -35,6 +44,13 @@ class SantaEvent(gC.rssImageExtractor):
                 continue
             if self.website in url:
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
+        for url in static_urls:
+            yield gC.scrapy.Request(url=url.rstrip(), callback=self.parse_start_url)
+    def parse_start_url(self, response):
+        urls = response.css('a[href*=desijuga][title]::attr(href)').getall()
+        for url in urls:
+            yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
+
 
     def parseFnc(self,response):
         print(self.website)
@@ -76,7 +92,7 @@ class SantaEvent(gC.rssImageExtractor):
         if 'filename' in response.meta:
             filename = response.meta['filename']
         # breakpoint()
-        savepath = r'D:\paradise\stuff\new\desileaks'
+        savepath = r'D:\paradise\stuff\new\pvd2'
         generic_downloader(videolink,filename,filename,4,savepath) 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):

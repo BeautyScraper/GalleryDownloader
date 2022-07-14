@@ -1,3 +1,4 @@
+import re
 import subprocess
 import os
 from urllib.parse import urlparse
@@ -52,7 +53,17 @@ def ariaDownload(url,downPath,filename,connections=4):
     temp_path = r'c:\dumpinGGrounds\aria'
     Path(temp_path).mkdir(exist_ok=True,parents=True)
     Path(downPath).mkdir(exist_ok=True,parents=True)
-    subprocess.call(['aria2c', '--dir', downPath, '-o', filename,'-x', str(connections) , url])
+    # breakpoint()
+    filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
+    subprocess.run(['aria2c', '--dir', temp_path, '-o', filename,'-x', str(connections) , url],capture_output=False)
+    # if not 'download completed' in str(x):
+    #     # breakpoint()
+    #     raise Exception('aria2c file downloading failed')
+    try:
+        shutil.move(Path(temp_path)/filename, Path(downPath)/filename)
+    except FileNotFoundError as e:
+        print("File not found")
+        # breakpoint()
     # dfile = Path(temp_path) / filename
     # if dfile.is_file():
     #    shutil.move(dfile,downPath)
