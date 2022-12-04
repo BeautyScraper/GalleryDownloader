@@ -35,34 +35,20 @@ class SantaEvent(gC.rssImageExtractor):
                 continue
             if self.website in url:
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
-            # if 'streamtape.com' in url:
-            #     yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+
 
     
     def streamtape(self,response):
-        # breakpoint()
         videolink = response.css('meta[itemprop=\"contentURL\"]::attr(content)').get()
         if videolink is None:
-            # breakpoint()
             with open('streamtapenot.txt', 'a+') as fp:
                 fp.write(response.url+'\n') 
             return 
-        # videolink = videolink.split('token=')[0] 
-        # token_string =  response.css('script').re('\&token=([^\'\"]*)\'\)\.substring')[-1] 
-        # videolink =  html.unescape('https:/'+videolink) + 'token=' +token_string + '&stream=1'
         filename = response.url.strip('/').split('/')[-1] +' '+ self.website +'.mp4'
-        # breakpoint()
-        # pgtitle = response.cnss('meta[name=\"og:title\"]::attr(content)').get()
-        # if 'mp4' in pgtitle:
-        #     filename = pgtitle
-        # if 'filename' in response.meta:
-        #     filename = response.meta['filename']
-        # breakpoint()
         savepath = r'D:\paradise\stuff\new\pvd2'
         generic_downloader(videolink,filename,filename,4,savepath) 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):
-        # import pdb; pdb.set_trace()
         print(iurl)
         imgUrls = [iurl.replace("@",str(i)) for i in range(l,u)]
         galcode = iurl.split("/")[-2]

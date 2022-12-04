@@ -31,7 +31,7 @@ class thumb_writer:
         if Path(filename).suffix != '.jpg':
             filename += '.jpg'
         filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
-        generic_downloader(img_url,filename,img_url,self.connections,str(Path(self.csv_path).parent))
+        generic_downloader(img_url,filename,filename,self.connections,str(Path(self.csv_path).parent))
         self.csv_data = self.csv_data.append({'filename':filename,'associated_url':associated_url},ignore_index=True)
         return
     

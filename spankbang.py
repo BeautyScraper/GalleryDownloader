@@ -28,23 +28,35 @@ class SantaEvent(gC.rssImageExtractor):
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
 
     def parseFnc(self,response):
+        # breakpoint()
         print(self.website)
         url = response.url.strip("/#")
         reso_list = ['1080p', '720p', '480p', '320p', '240p']
         # import pdb;pdb.set_trace()
-        x = response.css('script').re('.*stream_data.*')
-        dt = re.search('\{.*?\}',x[0])[0]
-        json_dict = json.loads(dt.replace('\'','"'))
-        highest_reso = None
-        for reso in reso_list:
-            if reso in json_dict:
-                highest_reso = reso
-                break
+        try:
+            x = response.css('script').re('.*stream_data.*')
+            dt = re.search('\{.*?\}',x[0])[0]
+            json_dict = json.loads(dt.replace('\'','"'))
+            highest_reso = None
+            lt = [x for x in json_dict if re.match('\d+p',x) and len(json_dict[x]) > 0]
+            max_reso = 720
+            highest_reso = max(filter(lambda x:int(re.match('(\d+)p',x)[1]) <= max_reso,lt ),key=lambda x:int(re.match('(\d+)p',x)[1]))
+            videoUrl = json_dict[highest_reso]
+        except:
+            breakpoint()
+        # for reso in reso_list:
+        #     if reso in json_dict:
+        #         highest_reso = reso
+        #         break
         
         
-        videoUrl = json_dict[highest_reso]
-        fileNames = [response.url.rstrip('/').split('/')[-1]+'.mp4']
+        if len(videoUrl) <= 0:
+            breakpoint()
+            # print("No video url found")
+            # return
+        fileNames = [response.url.rstrip('/').split('/')[-1]+ response.url.rstrip('/').split('/')[3]+'.mp4']
         print(videoUrl)
+        # breakpoint()
         # fileNames = [re.split('[=]',x)[-1] for x in videoUrl] if fileNames == [] else fileNames
         self.downloadGalleryGeneric(response, videoUrl, fileNames, fileNames[0],True,"gifs" )
         

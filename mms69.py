@@ -39,7 +39,9 @@ class SantaEvent(gC.rssImageExtractor):
     def parseFnc(self,response):
         print(self.website)
         streamtapelink = response.css('a[href*=streamtape]::attr(href)').get()
-        # if '%' in streamtapelink:
+        # if 'nasha-chaahat' in  response.url:
+            # breakpoint()
+        # if not '.' in streamtapelink:
             # breakpoint()
         logging.debug('this url does not contain streamtape link:\n'+ response.url)
         if not streamtapelink is None: 
@@ -68,7 +70,7 @@ class SantaEvent(gC.rssImageExtractor):
         videolink =  html.unescape('https:/'+videolink) + 'token=' +token_string + '&stream=1'
         filename = response.url.split('/')[-1]
         # breakpoint()
-        generic_downloader(videolink,filename,filename,4) 
+        generic_downloader(videolink,filename,filename,4,r'D:\paradise\stuff\new\hott') 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):
         # import pdb; pdb.set_trace()

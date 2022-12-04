@@ -9,9 +9,9 @@ class SantaEvent(gC.rssImageExtractor):
             filename = gC.sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            # filename = "galleryLinks.opml"
+            filename = "galleryLinks.opml"
             # filename = "StaticLinks.opml"
-            filename = "Test.opml"
+            # filename = "Test.opml"
         t = open(filename, "r+")
         urls = t.readlines()
         t.close()
