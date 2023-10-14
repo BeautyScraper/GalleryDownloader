@@ -38,6 +38,7 @@ def line_prepender(filename, line):
 
 def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
     filename = urlparse(singleurl).netloc + '.txt'
+    # breakpoint()
     savepath = r'D:\paradise\stuff\new\hott'
     if dirpath != '':
         savepath = dirpath
@@ -53,9 +54,9 @@ def ariaDownload(url,downPath,filename,connections=4):
     temp_path = r'c:\dumpinGGrounds\aria'
     Path(temp_path).mkdir(exist_ok=True,parents=True)
     Path(downPath).mkdir(exist_ok=True,parents=True)
-    # breakpoint()
     filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
-    subprocess.run(['aria2c', '--dir', temp_path, '-o', filename,'-x', str(connections) , url],capture_output=False)
+    # breakpoint()
+    subprocess.run(['aria2c','-l', r'C:\temp\arialog.txt' , '-UMozilla/5.0' ,'--dir', temp_path, '-o', filename,'-x', str(connections) , url.strip()],capture_output=False)
     # if not 'download completed' in str(x):
     #     # breakpoint()
     #     raise Exception('aria2c file downloading failed')
