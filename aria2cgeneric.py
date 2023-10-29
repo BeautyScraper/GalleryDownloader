@@ -4,6 +4,7 @@ import os
 from urllib.parse import urlparse
 import shutil
 from pathlib import Path
+import hashlib
 
 def alreadyNotDownloaded(fileName, Id):
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -36,9 +37,28 @@ def line_prepender(filename, line):
         f.seek(0, 0)
         f.write(line.rstrip('\r\n') + '\n' + content)
 
-def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
-    filename = urlparse(singleurl).netloc + '.txt'
+def gdurls(urls,dirpath='',file2dnames = None,ids='',connections=4):
+    temp = Path(dirpath).parent / re.sub('[^0-9a-zA-Z\.]+', '_', Path(dirpath).name) 
+    dirpath = str(temp)
+    if file2dnames is None:
+        file2dnames = [re.search('.*\.[^ ]*', x.split('/')[-1])[0] for x in urls]
+    if ids == '':
+        ids = urls[:]
     # breakpoint()
+    digest = hashlib.md5(''.join(ids).encode('utf-8')).hexdigest()
+    filename = urlparse(urls[0]).netloc + '_SG.txt'
+
+    if alreadyNotDownloaded(filename, digest):
+        gdurls_helper(urls,file2dnames,ids,connections,dirpath)
+        downloadCompleteRegister(filename, digest)
+
+def gdurls_helper(urls,file2dnames,ids,connections=4,dirpath=''):    
+    for url,fname,id in zip(urls,file2dnames,ids):
+        generic_downloader(url,fname,id,connections,dirpath)
+
+def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
+    # breakpoint()
+    filename = urlparse(singleurl).netloc + '.txt'
     savepath = r'D:\paradise\stuff\new\hott'
     if dirpath != '':
         savepath = dirpath
@@ -52,14 +72,16 @@ def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
 def ariaDownload(url,downPath,filename,connections=4):
     # import pdb;pdb.set_trace()
     temp_path = r'c:\dumpinGGrounds\aria'
+    # breakpoint()
+    # downPath  = 
     Path(temp_path).mkdir(exist_ok=True,parents=True)
     Path(downPath).mkdir(exist_ok=True,parents=True)
     filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
-    # breakpoint()
     subprocess.run(['aria2c','-l', r'C:\temp\arialog.txt' , '-UMozilla/5.0' ,'--dir', temp_path, '-o', filename,'-x', str(connections) , url.strip()],capture_output=False)
     # if not 'download completed' in str(x):
     #     # breakpoint()
     #     raise Exception('aria2c file downloading failed')
+    print(f'{filename} downloaded successfully and now being moved to {downPath}')
     try:
         shutil.move(Path(temp_path)/filename, Path(downPath)/filename)
     except FileNotFoundError as e:

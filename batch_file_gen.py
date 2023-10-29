@@ -3,7 +3,11 @@ import subprocess
 
 def execute_python_file(file_name):
     try:
-        subprocess.run(["python", file_name], check=True)
+        if 'c__' in file_name:
+            condaenv_name = file_name.split('c__')[-1].split('.')[0]
+            os.system(' '.join(["conda", "activate", condaenv_name,"&&", "python", file_name]))
+        else:
+            subprocess.run(["python", file_name], check=True)
     except FileNotFoundError:
         print(f"The file '{file_name}' does not exist.")
     except subprocess.CalledProcessError as e:
