@@ -29,6 +29,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url:
+                print(url)
                 resp = requests.get(url.rstrip("\n"),headers=request_dict)
                 response = HtmlResponse(url=url.rstrip("\n"), body=resp.text, encoding='utf-8') 
                 self.parseFnc(response) 
@@ -53,7 +54,8 @@ class SantaEvent(gC.rssImageExtractor):
         data_srcs = response.css('.page-break img::attr(data-src)').getall()
         data_srcs = [x.strip() for x in data_srcs]
         comicsdirectory = r'D:\paradise\stuff\new\comics'
-        mix_dir = str(Path(comicsdirectory) / response.css('title::text').get())
+        # breakpoint()
+        mix_dir = str(Path(comicsdirectory) / response.url.strip('/').split('/')[-2] / response.css('title::text').get())
         gdurls(data_srcs, mix_dir,connections=1)
 
 

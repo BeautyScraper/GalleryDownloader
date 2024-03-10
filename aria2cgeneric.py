@@ -38,6 +38,10 @@ def line_prepender(filename, line):
         f.write(line.rstrip('\r\n') + '\n' + content)
 
 def gdurls(urls,dirpath='',file2dnames = None,ids='',connections=4):
+    if len(urls) == 0:
+        print("no urls to do anything")
+        return
+
     temp = Path(dirpath).parent / re.sub('[^0-9a-zA-Z\.]+', '_', Path(dirpath).name) 
     dirpath = str(temp)
     if file2dnames is None:
@@ -57,7 +61,6 @@ def gdurls_helper(urls,file2dnames,ids,connections=4,dirpath=''):
         generic_downloader(url,fname,id,connections,dirpath)
 
 def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
-    # breakpoint()
     filename = urlparse(singleurl).netloc + '.txt'
     savepath = r'D:\paradise\stuff\new\hott'
     if dirpath != '':
@@ -81,6 +84,8 @@ def ariaDownload(url,downPath,filename,connections=4):
     # if not 'download completed' in str(x):
     #     # breakpoint()
     #     raise Exception('aria2c file downloading failed')
+    # (Path(downPath)/filename).mkdir(exist_ok=True,parents=True)
+    # breakpoint()
     print(f'{filename} downloaded successfully and now being moved to {downPath}')
     try:
         shutil.move(Path(temp_path)/filename, Path(downPath)/filename)

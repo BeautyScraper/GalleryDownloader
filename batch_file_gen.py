@@ -26,9 +26,11 @@ def main():
     for idx, file_name in enumerate(file_list, start=1):
         print(f"{idx}. {file_name}")
 
-    user_choice = input("Enter the number corresponding to the file you want to execute (or 'q' to quit): ")
+    user_choice = input("Enter the number corresponding to the file you want to execute (or 'q' to quit) and r to repeat last 5 most selected files: ")
+
     if user_choice.lower() == 'q':
         return
+    
 
     try:
         file_index = int(user_choice) - 1

@@ -12,7 +12,6 @@ import logging
 
 class SantaEvent(gC.rssImageExtractor):
     website = "skymovieshd"
-
     def start_requests(self):
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
         try:
@@ -34,6 +33,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url:
+                # breakpoint()
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
 
     def parseFnc(self,response):
@@ -48,10 +48,10 @@ class SantaEvent(gC.rssImageExtractor):
         logging.debug('this url does not contain streamtape link:\n'+ response.url)
         if not streamtapelink is None: 
             streamtapelink = streamtapelink.strip()
-            yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape,meta=metadata)
+            yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape, meta=metadata)
         else:
             # breakpoint()
-            yield gC.scrapy.Request(url=response.url, callback=self.streamtape , dont_filter = True,meta=metadata)
+            yield gC.scrapy.Request(url=response.url, callback=self.streamtape, dont_filter = True, meta=metadata)
 
         # videoUrl = json_dict[highest_reso]
         # fileNames = [response.url.rstrip('/').split('/')[-1]+'.mp4']
