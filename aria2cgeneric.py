@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 import hashlib
 
+
 def alreadyNotDownloaded(fileName, Id):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     try:
@@ -61,6 +62,7 @@ def gdurls_helper(urls,file2dnames,ids,connections=4,dirpath=''):
         generic_downloader(url,fname,id,connections,dirpath)
 
 def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
+    # breakpoint()
     filename = urlparse(singleurl).netloc + '.txt'
     savepath = r'D:\paradise\stuff\new\hott'
     if dirpath != '':
@@ -72,8 +74,11 @@ def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
         ariaDownload(singleurl, savepath, file2dname, connections)
         downloadCompleteRegister(filename, id)
 
-def ariaDownload(url,downPath,filename,connections=4):
+def ariaDownload(url,downPath,filename,connections=4,headers=None):
     # import pdb;pdb.set_trace()
+    if not headers is None:
+        ariaDownload_headsupport(url,downPath,filename,connections,headers)
+        return
     temp_path = r'c:\dumpinGGrounds\aria'
     # breakpoint()
     # downPath  = 
@@ -98,6 +103,28 @@ def ariaDownload(url,downPath,filename,connections=4):
     # else:
     #     raise "url not working"
     #     breakpoint()
+def ariaDownload_headsupport(url, downPath, filename, connections=4, headers=None):
+    temp_path = r'c:\dumpinGGrounds\aria'
+    Path(temp_path).mkdir(exist_ok=True, parents=True)
+    Path(downPath).mkdir(exist_ok=True, parents=True)
+    filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
+    
+    command = ['aria2c', '-l', r'C:\temp\arialog.txt', '-UMozilla/5.0', '--dir', temp_path, '-o', filename, '-x', str(connections), url.strip()]
+    
+    if headers:
+        for key, value in headers.items():
+            command.extend(['--header', f'{key}: {value}'])
+    
+    subprocess.run(command, capture_output=False)
+    
+    print(f'{filename} downloaded successfully and now being moved to {downPath}')
+    try:
+        shutil.move(Path(temp_path) / filename, Path(downPath) / filename)
+    except FileNotFoundError as e:
+        print("File not found")
+
+
+    
 def noteItDown(fppath,content,id,website):
     if alreadyNotDownloaded(website,id):
         with open(fppath, 'a+') as fp:

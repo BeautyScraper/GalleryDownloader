@@ -1,9 +1,10 @@
 import galleryCrawler as gC
 import re
 import json
+from aria2cgeneric import generic_downloader
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "spankbang.com"
+    website = "spankbang"
 
     def start_requests(self):
         try:
@@ -39,7 +40,7 @@ class SantaEvent(gC.rssImageExtractor):
             json_dict = json.loads(dt.replace('\'','"'))
             highest_reso = None
             lt = [x for x in json_dict if re.match('\d+p',x) and len(json_dict[x]) > 0]
-            max_reso = 720
+            max_reso = 1080
             highest_reso = max(filter(lambda x:int(re.match('(\d+)p',x)[1]) <= max_reso,lt ),key=lambda x:int(re.match('(\d+)p',x)[1]))
             videoUrl = json_dict[highest_reso]
         except:
@@ -58,7 +59,8 @@ class SantaEvent(gC.rssImageExtractor):
         print(videoUrl)
         # breakpoint()
         # fileNames = [re.split('[=]',x)[-1] for x in videoUrl] if fileNames == [] else fileNames
-        self.downloadGalleryGeneric(response, videoUrl, fileNames, fileNames[0],True,"gifs" )
+        generic_downloader(videoUrl[0],fileNames[0],fileNames[0],4,r'D:\paradise\stuff\new\to_be_clipped')
+        # self.downloadGalleryGeneric(response, videoUrl, fileNames, fileNames[0],True,"gifs" )
         
     def singleToManyImg(self,response,iurl,l=0,u=20):
         # import pdb; pdb.set_trace()

@@ -34,7 +34,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url or "pornxday.com" in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
 
     def parseFnc(self,response):
         print(self.website)
@@ -76,9 +76,9 @@ class SantaEvent(gC.rssImageExtractor):
         # if not response.meta['filename'] is None:
         #     filename =  response.meta['filename'].replace('-',' ').replace('.html','.mp4')
         if alreadyNotDownloaded('streamtape.jav', filename): 
-            download(r'D:\paradise\stuff\new\jav', filename, videolink)
+            generic_downloader(videolink,filename,filename,4,r'D:\paradise\stuff\new\to_be_clipped')
             downloadCompleteRegister('streamtape.jav',filename)
-            breakpoint()
+            # breakpoint()
         # generic_downloader(videolink,filename,filename,4,r'D:\paradise\stuff\new\jav') 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):

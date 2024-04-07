@@ -1,32 +1,35 @@
 import galleryCrawler as gC
+from thumbs import thumb_writer
 import re
 import json
 import html
 import subprocess
 from aria2cgeneric import generic_downloader,noteItDown
 import logging
-
-
-#https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
+from pathlib import Path
 
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "sexdug"
+    website = "pornxday"
+    thumbs_dir = r'c:\dumpinggrounds\thumbs'
 
     def start_requests(self):
-        logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
+        dir_path = Path(r'c:\dumpinggrounds\thumbs') / self.website /( 'thumbs_db.csv')
+        self.thumbnail = thumb_writer(str(dir_path)) 
         try:
             filename = gC.sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            filename = "galleryLinks.opml"
-            # filename = "StaticLinks.opml"n
+            # filename = "galleryLinks.opml"
+            filename = "StaticLinks.opml"
             # filename = "Test.opml"
         t = open(filename, "r+")
         urls = t.readlines()
         t.close()
         gC.random.shuffle(urls)
         for url in urls:
+            if '##' in url:
+                continue
             sqaureP = gC.re.search("@\[(.*)\]", url)
             if sqaureP != None:
                 lb, ub = [int(x) for x in gC.re.split("[-,]",sqaureP[1])]
@@ -35,26 +38,18 @@ class SantaEvent(gC.rssImageExtractor):
                 continue
             if self.website in url:
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
-
+            # if 'streamtape.com' in url:
+            #     yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
 
     
     def streamtape(self,response):
-        videolink = response.css('meta[itemprop=\"contentURL\"]::attr(content)').get()
-        if videolink is None:
-            with open('streamtapenot.txt', 'a+') as fp:
-                fp.write(response.url+'\n') 
-            return 
-        filename = response.url.strip('/').split('/')[-1] +' '+ self.website +'.mp4'
-        savepath = r'D:\paradise\stuff\new\to_be_clipped'
-        generic_downloader(videolink,filename,filename,4,savepath) 
-
-    def singleToManyImg(self,response,iurl,l=0,u=20):
-        print(iurl)
-        imgUrls = [iurl.replace("@",str(i)) for i in range(l,u)]
-        galcode = iurl.split("/")[-2]
-        fileNames = [galcode+" %s .jpg" % str(i) for i in range(l,u)]
-        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode=galcode)
-
+        # breakpoint()
+        all_img_links = response.xpath('//article//a//img/@data-src').getall() 
+        all_img_name = [x + '.jpg' for x in response.xpath('//article//a/@title').getall()]
+        all_img_associated_url = response.xpath('//article//a/@href').getall()
+        
+        self.thumbnail.list_thumbnail_gen(all_img_links,all_img_associated_url,all_img_name)
+ 
 if __name__ == "__main__":
     print(SantaEvent.website)
     try:

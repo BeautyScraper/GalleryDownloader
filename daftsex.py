@@ -5,14 +5,13 @@ import html
 import subprocess
 from aria2cgeneric import generic_downloader
 import logging
-from pyIDM import download,alreadyNotDownloaded, downloadCompleteRegister
+
 
 #https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
 
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "streamtape"
-
+    website = "daftsex"
     def start_requests(self):
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
         try:
@@ -33,8 +32,9 @@ class SantaEvent(gC.rssImageExtractor):
                 NewUrls = [url.replace(sqaureP[0],str(ui)) for ui in range(lb,ub)]
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
-            if self.website in url or "pornxday.com" in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+            if self.website in url:
+                # breakpoint()
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
 
     def parseFnc(self,response):
         print(self.website)
@@ -42,16 +42,15 @@ class SantaEvent(gC.rssImageExtractor):
         # if 'nasha-chaahat' in  response.url:
         # if not '.' in streamtapelink:
             # breakpoint()
-        filename = response.url.split('/')[-1]
-        # breakpoint()
+        filename = response.url.strip('/').split('/')[-1]+'.mp4'
         metadata = {'filename':filename}
         logging.debug('this url does not contain streamtape link:\n'+ response.url)
         if not streamtapelink is None: 
             streamtapelink = streamtapelink.strip()
-            yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape,meta=metadata)
+            yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape, meta=metadata)
         else:
             # breakpoint()
-            yield gC.scrapy.Request(url=response.url, callback=self.streamtape , dont_filter = True,meta=metadata)
+            yield gC.scrapy.Request(url=response.url, callback=self.streamtape, dont_filter = True, meta=metadata)
 
         # videoUrl = json_dict[highest_reso]
         # fileNames = [response.url.rstrip('/').split('/')[-1]+'.mp4']
@@ -71,15 +70,10 @@ class SantaEvent(gC.rssImageExtractor):
         token_string =  response.css('script').re('\&token=([^\'\"]*)\'\)\.substring')[-1] 
         videolink =  html.unescape('https:/'+videolink) + 'token=' +token_string + '&stream=1'
         filename = response.url.split('/')[-1]
+        if not response.meta['filename'] is None:
+            filename =  response.meta['filename'].replace('-',' ').replace('.html','.mp4')
         # breakpoint()
-        filename =  response.css('.col-12.text-center.video-title>h2::text').get()
-        # if not response.meta['filename'] is None:
-        #     filename =  response.meta['filename'].replace('-',' ').replace('.html','.mp4')
-        if alreadyNotDownloaded('streamtape.jav', filename): 
-            download(r'D:\paradise\stuff\new\jav', filename, videolink)
-            downloadCompleteRegister('streamtape.jav',filename)
-            breakpoint()
-        # generic_downloader(videolink,filename,filename,4,r'D:\paradise\stuff\new\jav') 
+        generic_downloader(videolink,filename,filename,4,r'D:\paradise\stuff\new\to_be_clipped') 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):
         # import pdb; pdb.set_trace()
