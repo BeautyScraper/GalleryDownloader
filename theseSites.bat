@@ -44,3 +44,4 @@ python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Aut
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "allporncomic.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "xozilla.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
 python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\inHaste\quicKlip.txt "spankbang.com" >>"D:\Developed\Automation\GalleryDownloader\galleryLinks.opml"
+python "D:\Developed\Automation\python\extractMatchingLines.py" D:\Developed\Automation\GalleryDownloader\galleryLinks.opml "javtiful" >>"D:\Developed\playwright_test\links.opml"

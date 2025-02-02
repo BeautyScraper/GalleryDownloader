@@ -17,21 +17,21 @@ class thumb_writer:
         else:
             self.csv_data = pd.DataFrame(columns=['filename','associated_url'])
 
-    def list_thumbnail_gen(self,img_urls,associated_urls,filenames):
+    def list_thumbnail_gen(self,img_urls,associated_urls,filenames,headers=None):
         zipped_thumb = zip(img_urls,associated_urls,filenames)
         if len(img_urls) != len(associated_urls) or len(img_urls) != len(filenames):
             print("Error: img_urls, associated_urls, and filenames must be the same length")
             breakpoint()
         for x in zipped_thumb:
-            self.single_thumbnail_gen(x[0],x[1],x[2])
+            self.single_thumbnail_gen(x[0],x[1],x[2],headers)
         self.thumbs_write()
         return
 
-    def single_thumbnail_gen(self,img_url,associated_url,filename):
+    def single_thumbnail_gen(self,img_url,associated_url,filename,headers=None):
         if Path(filename).suffix != '.jpg':
             filename += '.jpg'
         filename = re.sub('[^0-9a-zA-Z\.]+', '_', filename)
-        generic_downloader(img_url,filename,filename,self.connections,str(Path(self.csv_path).parent))
+        generic_downloader(img_url,filename,filename,self.connections,str(Path(self.csv_path).parent),headers=headers)
         self.csv_data = self.csv_data.append({'filename':filename,'associated_url':associated_url},ignore_index=True)
         return
     

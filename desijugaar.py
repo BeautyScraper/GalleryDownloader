@@ -12,7 +12,7 @@ from pathlib import Path
 #https://desijugar.info/page/2/
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "desijugar.info"
+    website = "desijugar"
 
     def start_requests(self):
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
@@ -92,7 +92,7 @@ class SantaEvent(gC.rssImageExtractor):
         if 'filename' in response.meta:
             filename = response.meta['filename']
         # breakpoint()
-        savepath = r'D:\paradise\stuff\new\pvd2'
+        savepath = r'D:\paradise\stuff\new\to_be_clipped'
         generic_downloader(videolink,filename,filename,4,savepath) 
 
     def singleToManyImg(self,response,iurl,l=0,u=20):

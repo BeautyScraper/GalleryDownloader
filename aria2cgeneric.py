@@ -61,7 +61,7 @@ def gdurls_helper(urls,file2dnames,ids,connections=4,dirpath=''):
     for url,fname,id in zip(urls,file2dnames,ids):
         generic_downloader(url,fname,id,connections,dirpath)
 
-def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
+def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath='',headers=None):
     # breakpoint()
     filename = urlparse(singleurl).netloc + '.txt'
     savepath = r'D:\paradise\stuff\new\hott'
@@ -71,7 +71,7 @@ def generic_downloader(singleurl,file2dname,id='',connections=4,dirpath=''):
     if id == '':
         id = singleurl.split('/')[-1]
     if alreadyNotDownloaded(filename, id):
-        ariaDownload(singleurl, savepath, file2dname, connections)
+        ariaDownload(singleurl, savepath, file2dname, connections,headers)
         downloadCompleteRegister(filename, id)
 
 def ariaDownload(url,downPath,filename,connections=4,headers=None):

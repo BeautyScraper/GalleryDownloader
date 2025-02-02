@@ -29,7 +29,7 @@ class SantaEvent(gC.rssImageExtractor):
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc)
 
     def parseFnc(self,response):
-        # breakpoint()
+        breakpoint()
         print(self.website)
         url = response.url.strip("/#")
         reso_list = ['1080p', '720p', '480p', '320p', '240p']
@@ -42,6 +42,7 @@ class SantaEvent(gC.rssImageExtractor):
             lt = [x for x in json_dict if re.match('\d+p',x) and len(json_dict[x]) > 0]
             max_reso = 1080
             highest_reso = max(filter(lambda x:int(re.match('(\d+)p',x)[1]) <= max_reso,lt ),key=lambda x:int(re.match('(\d+)p',x)[1]))
+            # breakpoint()
             videoUrl = json_dict[highest_reso]
         except:
             breakpoint()

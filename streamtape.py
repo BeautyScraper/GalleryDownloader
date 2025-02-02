@@ -33,7 +33,8 @@ class SantaEvent(gC.rssImageExtractor):
                 NewUrls = [url.replace(sqaureP[0],str(ui)) for ui in range(lb,ub)]
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
-            if self.website in url or "pornxday.com" in url:
+            # if self.website in url or "pornxday.com" in url:
+            if self.website in url:
                 yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
 
     def parseFnc(self,response):

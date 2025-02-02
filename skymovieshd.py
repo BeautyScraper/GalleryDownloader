@@ -45,19 +45,32 @@ class SantaEvent(gC.rssImageExtractor):
         filename = response.url.split('/')[-1]
         # breakpoint()
         metadata = {'filename':filename}
-        logging.debug('this url does not contain streamtape link:\n'+ response.url)
+        # logging.debug('this url does not contain streamtape link:\n'+ response.url)
         if not streamtapelink is None: 
             streamtapelink = streamtapelink.strip()
             yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape, meta=metadata)
         else:
             # breakpoint()
-            yield gC.scrapy.Request(url=response.url, callback=self.streamtape, dont_filter = True, meta=metadata)
+            for howurl in response.css('a[href*=howblogs]::attr(href)').getall():
+                yield gC.scrapy.Request(url=howurl, callback=self.howblogs, dont_filter = True, meta=metadata)
 
         # videoUrl = json_dict[highest_reso]
         # fileNames = [response.url.rstrip('/').split('/')[-1]+'.mp4']
         # print(videoUrl)
         # # fileNames = [re.split('[=]',x)[-1] for x in videoUrl] if fileNames == [] else fileNames
         # self.downloadGalleryGeneric(response, videoUrl, fileNames, fileNames[0],True,"gifs" )
+    def howblogs(self,response):
+        streamtapelink = response.css('a[href*=streamtape]::attr(href)').get()
+        # if 'nasha-chaahat' in  response.url:
+        # if not '.' in streamtapelink:
+            # breakpoint()
+        # breakpoint()
+        # logging.debug('this url does not contain streamtape link:\n'+ response.url)
+        if not streamtapelink is None: 
+            streamtapelink = streamtapelink.strip()
+            yield gC.scrapy.Request(url=streamtapelink, callback=self.streamtape, meta=response.meta)
+
+
 
     def streamtape(self,response):
         videolink = response.css('#ideoooolink::text').get()

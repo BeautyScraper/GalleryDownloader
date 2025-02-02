@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "javtiful.com"
+    website = "rargb"
     thumbs_dir = r'c:\dumpinggrounds\thumbs'
 
     def start_requests(self):
@@ -27,6 +27,7 @@ class SantaEvent(gC.rssImageExtractor):
         urls = t.readlines()
         t.close()
         gC.random.shuffle(urls)
+        proxy = "https://147.93.116.2:3128"
         for url in urls:
             if '##' in url:
                 continue
@@ -37,29 +38,42 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc, meta={"verify_ssl": False, "proxy": proxy})
             # if 'streamtape.com' in url:
             #     yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+    def parseFnc(self,response):
 
+        # breakpoint()
+        print(self.website)
+        streamtapelinks =  response.css('a[href*=torrent]::attr(href)').getall()
+        # if 'nasha-chaahat' in  response.url:
+        # if not '.' in streamtapelink:
+        filename = response.url.split('/')[-1]
+        # breakpoint()
+        metadata = {'filename':filename,"verify_ssl": False}
+        for streamtapelink in streamtapelinks:
+            streamtapelink = streamtapelink.strip()
+            yield gC.scrapy.Request(url=response.urljoin(streamtapelink), callback=self.streamtape,meta=metadata)
+        
+
+        # videoUrl = json_dict[highest_reso]
+        # fileNames = [response.url.rstrip('/').split('/')[-1]+'.mp4']
+    
     
     def streamtape(self,response):
         # breakpoint()
-        all_img_links = response.xpath('//div[@class="col pb-3"]//a//img/@data-src').getall()[1:] 
-        all_img_name = [x[:100] + '.jpg' for x in response.xpath('//div[@class="col pb-3"]//a//img/@alt').getall()]
-        all_img_associated_url = response.xpath('//div[@class="col pb-3"]//a[@title]//@href').getall()[1:]
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
-            'Accept': 'image/avif,image/webp,*/*',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Referer': 'https://javtiful.com/',
-            'Sec-Fetch-Dest': 'image',
-            'Sec-Fetch-Mode': 'no-cors',
-            'Sec-Fetch-Site': 'cross-site'
-        }
-        self.thumbnail.list_thumbnail_gen(all_img_links,all_img_associated_url,all_img_name,headers)
- 
+        all_img_links = response.css('a[href*=imgtraffic]::attr(href)').getall()
+        if (len(all_img_links) > 0):
+            self.traffic(response)
+        
+    def traffic(self,response):
+        # breakpoint()
+        all_img_links = [x.replace('i-1','1').replace('jpeg.html', 'jpeg') for x in response.css('a[href*=imgtraffic]::attr(href)').getall()]
+        all_img_associated_url =  [response.url] * len(all_img_links)
+        all_img_name = [x.split('/')[-1].replace('jpeg.html', 'jpg') for x in response.css('a[href*=imgtraffic]::attr(href)').getall()]
+        # breakpoint()
+        self.thumbnail.list_thumbnail_gen(all_img_links,all_img_associated_url,all_img_name)
+
 if __name__ == "__main__":
     print(SantaEvent.website)
     try:

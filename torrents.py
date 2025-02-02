@@ -1,55 +1,63 @@
 import galleryCrawler as gC
-from thumbs import thumb_writer
 import re
 import json
 import html
 import subprocess
 from aria2cgeneric import generic_downloader,noteItDown
 import logging
-from pathlib import Path
+from qtorrent import add_magnet_links 
+
+
+#https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
 
 
 class SantaEvent(gC.rssImageExtractor):
-    website = "pornxday"
-    thumbs_dir = r'c:\dumpinggrounds\thumbs'
+    website = "rargb"
 
     def start_requests(self):
-        dir_path = Path(r'c:\dumpinggrounds\thumbs') / self.website /( 'thumbs_db.csv')
-        self.thumbnail = thumb_writer(str(dir_path)) 
+        logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
         try:
             filename = gC.sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            # filename = "galleryLinks.opml"
-            filename = "StaticLinks.opml"
+            filename = "galleryLinks.opml"
+            # filename = "StaticLinks.opml"n
             # filename = "Test.opml"
         t = open(filename, "r+")
         urls = t.readlines()
         t.close()
         gC.random.shuffle(urls)
         for url in urls:
-            if '##' in url:
-                continue
             sqaureP = gC.re.search("@\[(.*)\]", url)
             if sqaureP != None:
                 lb, ub = [int(x) for x in gC.re.split("[-,]",sqaureP[1])]
                 NewUrls = [url.replace(sqaureP[0],str(ui)) for ui in range(lb,ub)]
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
-            if self.website in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape, meta={"verify_ssl": False})
-            # if 'streamtape.com' in url:
-            #     yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
+            if self.website in url and '1080p' in url:
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape,  meta={"verify_ssl": False})
+
 
     
     def streamtape(self,response):
-        # breakpoint()
-        all_img_links = response.xpath('//article//a//img/@data-src').getall() 
-        all_img_name = [x + '.jpg' for x in response.xpath('//article//a/@title').getall()]
-        all_img_associated_url = response.xpath('//article//a/@href').getall()
-        
-        self.thumbnail.list_thumbnail_gen(all_img_links,all_img_associated_url,all_img_name)
- 
+
+        magnets_links = response.css('a[href*=magnet]::attr(href)').get()
+
+        try:
+            add_magnet_links(magnet_link=magnets_links,key_id=response.url,save_path=r'D:\paradise\stuff\new\hott')
+        except Exception as e:
+            print(e)
+            breakpoint()
+            logging.debug(str(e))
+
+
+    def singleToManyImg(self,response,iurl,l=0,u=20):
+        print(iurl)
+        imgUrls = [iurl.replace("@",str(i)) for i in range(l,u)]
+        galcode = iurl.split("/")[-2]
+        fileNames = [galcode+" %s .jpg" % str(i) for i in range(l,u)]
+        self.downloadGalleryGeneric(response, imgUrls, fileNames, galCode=galcode)
+
 if __name__ == "__main__":
     print(SantaEvent.website)
     try:
