@@ -7,13 +7,20 @@ import subprocess
 from aria2cgeneric import generic_downloader,noteItDown
 import logging
 from pathlib import Path
-
+from utility.get_proxy import ProxySelector
 
 class SantaEvent(gC.rssImageExtractor):
     website = "pornxday"
     thumbs_dir = r'c:\dumpinggrounds\thumbs'
 
     def start_requests(self):
+        selector = ProxySelector("utility/proxy.opml")
+        working_proxy = selector.get_working_proxy()
+        if working_proxy:
+            print(f"Working proxy found: {working_proxy}")
+        else:
+            print("No working proxy found.")
+        # breakpoint()
         dir_path = Path(r'c:\dumpinggrounds\thumbs') / self.website /( 'thumbs_db.csv')
         self.thumbnail = thumb_writer(str(dir_path)) 
         try:
@@ -37,7 +44,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape, meta={"verify_ssl": False})
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape, meta={"verify_ssl": False,'proxy': working_proxy})
             # if 'streamtape.com' in url:
             #     yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape)
 

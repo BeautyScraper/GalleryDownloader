@@ -6,7 +6,7 @@ import subprocess
 from aria2cgeneric import generic_downloader
 import logging
 from pyIDM import download,alreadyNotDownloaded, downloadCompleteRegister
-
+from utility.get_proxy import ProxySelector
 #https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
 
 
@@ -14,6 +14,12 @@ class SantaEvent(gC.rssImageExtractor):
     website = "streamtape"
 
     def start_requests(self):
+        selector = ProxySelector("utility/proxy.opml")
+        working_proxy = selector.get_working_proxy()
+        if working_proxy:
+            print(f"Working proxy found: {working_proxy}")
+        else:
+            print("No working proxy found.")
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
         try:
             filename = gC.sys.argv[1]
@@ -34,7 +40,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url or "pornxday.com" in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc, meta={"verify_ssl": False})
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc, meta={"verify_ssl": False,'proxy':working_proxy})
 
     def parseFnc(self,response):
         print(self.website)

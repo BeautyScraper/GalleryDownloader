@@ -35,7 +35,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url and '1080p' in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape,  meta={"verify_ssl": False})
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape,  meta={"verify_ssl": False,'proxy': '//3.124.133.93:3128'})
 
 
     
