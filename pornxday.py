@@ -14,12 +14,13 @@ class SantaEvent(gC.rssImageExtractor):
     website = "streamtape"
 
     def start_requests(self):
-        selector = ProxySelector("utility/proxy.opml")
-        working_proxy = selector.get_working_proxy()
-        if working_proxy:
-            print(f"Working proxy found: {working_proxy}")
-        else:
-            print("No working proxy found.")
+        # selector = ProxySelector("utility/proxy.opml" )
+        # working_proxy = selector.get_working_proxy()
+        # if working_proxy:
+        #     print(f"Working proxy found: {working_proxy}")
+        # else:
+        #     print("No working proxy found.")
+        #     breakpoint()
         logging.basicConfig(filename=r'c:\\'+self.website+'.log',level=logging.DEBUG)
         try:
             filename = gC.sys.argv[1]
@@ -40,7 +41,7 @@ class SantaEvent(gC.rssImageExtractor):
                 [urls.append(NewUrl) for NewUrl in NewUrls]
                 continue
             if self.website in url or "pornxday.com" in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc, meta={"verify_ssl": False,'proxy':working_proxy})
+                yield gC.scrapy.Request(url=url.rstrip(), callback=self.parseFnc, meta={"verify_ssl": False,'dont_cache': True})
 
     def parseFnc(self,response):
         print(self.website)
@@ -50,7 +51,7 @@ class SantaEvent(gC.rssImageExtractor):
             # breakpoint()
         filename = response.url.split('/')[-1]
         # breakpoint()
-        metadata = {'filename':filename,"verify_ssl": False}
+        metadata = {'filename':filename}
         logging.debug('this url does not contain streamtape link:\n'+ response.url)
         if not streamtapelink is None: 
             streamtapelink = streamtapelink.strip()

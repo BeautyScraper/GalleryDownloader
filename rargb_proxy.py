@@ -11,11 +11,7 @@ from scrapy.core.downloader.handlers.http import HTTPDownloadHandler
 import aiohttp
 
 #https://desijugar.info/2022/06/23/glow-with-the-flow-simran-kaur/
-class AiohttpDNSHandler(HTTPDownloadHandler):
-    async def _create_session(self):
-        return aiohttp.ClientSession(connector=aiohttp.TCPConnector(
-            resolver=aiohttp.resolver.AsyncResolver(nameservers=["94.140.14.14"])
-        ))
+
 
 
 class SantaEvent(gC.rssImageExtractor):
@@ -34,7 +30,7 @@ class SantaEvent(gC.rssImageExtractor):
             filename = gC.sys.argv[1]
         except:
             # filename2 = "upperbound.opml"
-            filename = "galleryLinks.opml"
+            filename = "rargb_proxy_links.opml"
             # filename = "StaticLinks.opml"n
             # filename = "Test.opml"
         t = open(filename, "r+")
@@ -42,23 +38,16 @@ class SantaEvent(gC.rssImageExtractor):
         t.close()
         gC.random.shuffle(urls)
         for url in urls:
-            sqaureP = gC.re.search("@\[(.*)\]", url)
-            if sqaureP != None:
-                lb, ub = [int(x) for x in gC.re.split("[-,]",sqaureP[1])]
-                NewUrls = [url.replace(sqaureP[0],str(ui)) for ui in range(lb,ub)]
-                [urls.append(NewUrl) for NewUrl in NewUrls]
-                continue
-            if self.website in url and '1080p' in url:
-                yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape,  meta={"verify_ssl": False, 'dont_cache': True})
+            yield gC.scrapy.Request(url=url.rstrip(), callback=self.streamtape,meta={'dont_filter':True})
 
 
     
     def streamtape(self,response):
 
-        magnets_links = response.css('a[href*=magnet]::attr(href)').get()
         # breakpoint()
+        magnets_links = response.css('a[href*=magnet]::attr(href)').get()
         try:
-            add_magnet_links(magnet_link=magnets_links,key_id=response.url,save_path=r'D:\paradise\stuff\new\hott')
+            add_magnet_links(magnet_link=magnets_links,key_id=response.url,save_path=r'D:\paradise\stuff\new\torrents')
         except Exception as e:
             print(e)
             breakpoint()
@@ -77,7 +66,6 @@ if __name__ == "__main__":
     try:
         process = gC.CrawlerProcess({
             'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-            'DOWNLOADER_HTTPCLIENT': AiohttpDNSHandler
         })
         process.crawl(SantaEvent)
         process.start()
